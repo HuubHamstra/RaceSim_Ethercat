@@ -1,0 +1,2050 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <fileHeader companyName="" productName="CODESYS" productVersion="CODESYS V3.5 SP20 Patch 1" creationDateTime="2024-07-03T17:40:48.9144031" />
+  <contentHeader name="Ethercat.project" modificationDateTime="2024-07-03T17:14:47.7302062">
+    <coordinateInfo>
+      <fbd>
+        <scaling x="1" y="1" />
+      </fbd>
+      <ld>
+        <scaling x="1" y="1" />
+      </ld>
+      <sfc>
+        <scaling x="1" y="1" />
+      </sfc>
+    </coordinateInfo>
+    <addData>
+      <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
+        <ProjectInformation />
+      </data>
+    </addData>
+  </contentHeader>
+  <types>
+    <dataTypes />
+    <pous />
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="Device">
+        <resource name="Application">
+          <task name="MainTask" interval="PT0.004S" priority="1">
+            <pouInstance name="PLC_PRG" typeName="">
+              <documentation>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+              </documentation>
+            </pouInstance>
+            <addData>
+              <data name="http://www.3s-software.com/plcopenxml/tasksettings" handleUnknown="implementation">
+                <TaskSettings KindOfTask="Cyclic" Interval="t#4ms" IntervalUnit="ms" WithinSPSTimeSlicing="true">
+                  <Watchdog Enabled="false" TimeUnit="ms" Sensitivity="1" />
+                </TaskSettings>
+              </data>
+              <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                <ObjectId>496e3fb3-f214-4933-8001-63b45c1720ca</ObjectId>
+              </data>
+            </addData>
+          </task>
+          <task name="EtherCAT_Task" interval="PT0.004S" priority="1">
+            <addData>
+              <data name="http://www.3s-software.com/plcopenxml/tasksettings" handleUnknown="implementation">
+                <TaskSettings KindOfTask="Cyclic" Interval="t#4ms" IntervalUnit="ms" WithinSPSTimeSlicing="true">
+                  <Watchdog Enabled="false" TimeUnit="ms" />
+                </TaskSettings>
+              </data>
+              <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                <ObjectId>b3406d30-d628-4147-b884-a7b662ec97b4</ObjectId>
+              </data>
+            </addData>
+          </task>
+          <addData>
+            <data name="http://www.3s-software.com/plcopenxml/pou" handleUnknown="implementation">
+              <pou name="PLC_PRG" pouType="program">
+                <interface>
+                  <localVars>
+                    <variable name="Blink">
+                      <type>
+                        <derived name="TON" />
+                      </type>
+                    </variable>
+                    <variable name="Blink2">
+                      <type>
+                        <derived name="TON" />
+                      </type>
+                    </variable>
+                    <variable name="Output1">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="Start1">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="Start2">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="Fin1">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="Fin2">
+                      <type>
+                        <BOOL />
+                      </type>
+                    </variable>
+                    <variable name="Cyclestate">
+                      <type>
+                        <INT />
+                      </type>
+                    </variable>
+                  </localVars>
+                </interface>
+                <body>
+                  <ST>
+                    <xhtml xmlns="http://www.w3.org/1999/xhtml">Blink(IN:= Start1, PT:= T#1000MS, Q=&gt; Fin1, ET=&gt; );
+Blink2(IN:= Start2, PT:= T#1000MS, Q=&gt; Fin2 , ET=&gt; );
+CASE Cyclestate OF	
+	0:
+		Start1 := TRUE;
+		Output1 := TRUE;		
+		Fin2 := FALSE;
+		Cyclestate := 10;		
+	10:
+		IF Fin1 THEN
+			Start1 := FALSE;
+			Output1 := FALSE;			
+			Cyclestate := 20;
+		ELSE
+			Cyclestate := 10;
+		END_IF		
+	20:
+		Start2 := TRUE;
+		Cyclestate := 30;
+		Fin1 := FALSE;		
+	30:
+		IF Fin2 THEN
+			Start2 := FALSE;
+			Cyclestate := 0;
+		ELSE
+			Cyclestate := 30;
+		END_IF
+END_CASE</xhtml>
+                  </ST>
+                </body>
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                    <ObjectId>58508868-32c8-481b-8520-4cd8aa76209d</ObjectId>
+                  </data>
+                </addData>
+              </pou>
+            </data>
+            <data name="http://www.3s-software.com/plcopenxml/libraries" handleUnknown="implementation">
+              <Libraries>
+                <Library Name="#SM3_Basic" Namespace="SM3_Basic" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="SM3_Basic, 4.16.0.0 (CODESYS)" />
+                <Library Name="#SM3_CNC" Namespace="SM3_CNC" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="SM3_CNC, 4.16.0.0 (CODESYS)" />
+                <Library Name="#SM3_Robotics" Namespace="SM3_Robotics" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="SM3_Robotics, 4.16.0.0 (CODESYS)" />
+                <Library Name="#SM3_Robotics_Visu" Namespace="SM3_Robotics_Visu" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="SM3_Robotics_Visu, 4.16.0.0 (CODESYS)" />
+                <Library Name="#SM3_Transformation" Namespace="TRAFO" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="SM3_Transformation, 4.16.0.0 (CODESYS)" />
+                <Library Name="#IoStandard" Namespace="IoStandard" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="true" DefaultResolution="IoStandard, 3.5.17.0 (System)" />
+                <Library Name="#3SLicense" Namespace="_3S_LICENSE" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="3SLicense, 0.0.0.0 (3S - Smart Software Solutions GmbH)" ResolverGuid="97c3b452-d9fa-4ac2-9d0c-3d420aa6d95b" />
+                <Library Name="#CAA Device Diagnosis" Namespace="DED" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="CAA Device Diagnosis, 3.5.20.0 (CAA Technical Workgroup)" />
+                <Library Name="#Standard" Namespace="Standard" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="false" LinkAllContent="false" DefaultResolution="Standard, * (System)" />
+                <Library Name="IoDrvGPIO, 4.11.0.0 (CODESYS)" Namespace="IoDrvGPIO" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" />
+                <Library Name="#BreakpointLogging" Namespace="BPLog" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="Breakpoint Logging Functions, * (3S - Smart Software Solutions GmbH)" />
+                <Library Name="#IODrvEtherCAT" Namespace="IoDrvEthercatLib" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="IoDrvEtherCAT, 4.1.0.0 (3S - Smart Software Solutions GmbH)" />
+                <Library Name="#IoDrvEL6224" Namespace="IoDrvEL6224" HideWhenReferencedAsDependency="false" PublishSymbolsInContainer="false" SystemLibrary="true" LinkAllContent="false" DefaultResolution="IoDrvEL6224, 4.3.0.0 (3S - Smart Software Solutions GmbH)" />
+                <PlaceholderRedirections>
+                  <PlaceholderRedirection Placeholder="System_VisuElemXYChart" Redirection="VisuElemXYChart, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuElemTextEditor" Redirection="VisuElemTextEditor, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="Standard" Redirection="Standard, 3.5.18.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuElemMeter" Redirection="VisuElemMeter, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuElemsSpecialControls" Redirection="VisuElemsSpecialControls, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuNativeControl" Redirection="VisuNativeControl, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuElemBase" Redirection="VisuElemBase, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuElemTrace" Redirection="VisuElemTrace, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="VisuSymbols" Redirection="VisuSymbols, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="StringUtils" Redirection="StringUtils, 3.5.20.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuElemCamDisplayer" Redirection="VisuElemCamDisplayer, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuElems" Redirection="VisuElems, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuElem3DPath" Redirection="VisuElem3DPath, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuElemsDateTime" Redirection="VisuElemsDateTime, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuElemsAlarm" Redirection="VisuElemsAlarm, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuElemsWinControls" Redirection="VisuElemsWinControls, 4.5.0.0 (System)" />
+                  <PlaceholderRedirection Placeholder="ElementCollections" Redirection="Element Collections, 3.5.17.0 (3S - Smart Software Solutions GmbH)" />
+                  <PlaceholderRedirection Placeholder="Standard64" Redirection="Standard64, 3.5.20.0 (System)" />
+                  <PlaceholderRedirection Placeholder="FloatingPointUtils" Redirection="FloatingPointUtils, 3.5.17.0 (System)" />
+                  <PlaceholderRedirection Placeholder="System_VisuInputs" Redirection="VisuInputs, 4.5.0.0 (System)" />
+                </PlaceholderRedirections>
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                    <ObjectId>11cc7bd8-c09a-4aa6-b90a-ca2f9a53597f</ObjectId>
+                  </data>
+                </addData>
+              </Libraries>
+            </data>
+            <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+              <ObjectId>b1914d62-45be-4ceb-b75c-f6b6b8c72f93</ObjectId>
+            </data>
+          </addData>
+        </resource>
+        <addData>
+          <data name="Device" handleUnknown="discard">
+            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+              <DeviceType>
+                <DeviceIdentification>
+                  <Type>4102</Type>
+                  <Id>0000 0012</Id>
+                  <Version>4.12.0.0</Version>
+                </DeviceIdentification>
+                <Connector moduleType="256" interface="Common.PCI" connectorId="0">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="1280" interface="GPIOSysfs" connectorId="1">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="1279" interface="Common.SoftMotion.General" connectorId="2">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="504" interface="Raspberry.GPIOs" connectorId="3">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="769" interface="SafetyInterface" connectorId="4">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="499" interface="Raspberry.OnewireMaster" connectorId="5">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="502" interface="Raspberry.Camera2" connectorId="6">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="497" interface="Raspberry.SPIMaster" connectorId="7">
+                  <HostParameterSet />
+                </Connector>
+                <Connector moduleType="496" interface="Raspberry.I2CMaster" connectorId="8">
+                  <HostParameterSet />
+                </Connector>
+                <DeviceParameterSet />
+              </DeviceType>
+            </Device>
+          </data>
+          <data name="configurations" handleUnknown="discard">
+            <configurations>
+              <configuration name="EtherCAT_Master">
+                <addData>
+                  <data name="Device" handleUnknown="discard">
+                    <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+                      <DeviceType>
+                        <DeviceIdentification>
+                          <Type>64</Type>
+                          <Id>0000 0001</Id>
+                          <Version>4.7.0.0</Version>
+                        </DeviceIdentification>
+                        <Connector moduleType="257" role="child" interface="Common.PCI" connectorId="1">
+                          <HostParameterSet />
+                        </Connector>
+                        <Connector moduleType="64" interface="Common.Ethercat" connectorId="2" hostpath="1">
+                          <HostParameterSet>
+                            <ParameterSection>
+                              <Name>Second Network adapter</Name>
+                              <Description />
+                              <Parameter ParameterId="1073745920" type="std:BOOL" IndexInDevDesc="30">
+                                <Attributes />
+                                <Value name="_x0031_073745920" visiblename="EnableSecondAdapter" desc="Enable second network adapter">FALSE</Value>
+                                <Name>EnableSecondAdapter</Name>
+                                <Description>Enable second network adapter</Description>
+                              </Parameter>
+                              <Parameter ParameterId="1073745925" type="std:ARRAY [0..5] OF BYTE" IndexInDevDesc="31">
+                                <Attributes />
+                                <Value name="_x0031_073745925" visiblename="SrcAddress" desc="Source Address">[0,0,0,0,0,0]</Value>
+                                <Name>SrcAddress</Name>
+                                <Description>Source Address</Description>
+                              </Parameter>
+                              <Parameter ParameterId="1073745927" type="std:ARRAY [0..5] OF BYTE" IndexInDevDesc="32">
+                                <Attributes />
+                                <Value name="_x0031_073745927" visiblename="DestAddress" desc="Destination Address">[255,255,255,255,255,255]</Value>
+                                <Name>DestAddress</Name>
+                                <Description>Destination Address</Description>
+                              </Parameter>
+                              <Parameter ParameterId="1073745929" type="std:STRING(100)" IndexInDevDesc="33">
+                                <Attributes />
+                                <Value name="_x0031_073745929" visiblename="NetworkName" desc="Name of the network card">''</Value>
+                                <Name>NetworkName</Name>
+                                <Description>Name of the network card</Description>
+                              </Parameter>
+                              <Parameter ParameterId="1073745930" type="std:WSTRING(100)" IndexInDevDesc="34">
+                                <Attributes />
+                                <Value name="_x0031_073745930" visiblename="NetworkName" desc="Name of the network card">""</Value>
+                                <Name>NetworkName</Name>
+                                <Description>Name of the network card</Description>
+                              </Parameter>
+                              <Parameter ParameterId="1073745931" type="std:BOOL" IndexInDevDesc="35">
+                                <Attributes />
+                                <Value name="_x0031_073745931" visiblename="SelectNetworkByName" desc="Select network by name">FALSE</Value>
+                                <Name>SelectNetworkByName</Name>
+                                <Description>Select network by name</Description>
+                              </Parameter>
+                              <Parameter ParameterId="1073745932" type="std:BOOL" IndexInDevDesc="36">
+                                <Attributes />
+                                <Value name="_x0031_073745932" visiblename="CompareNetworkName" desc="Comapare exact network name">FALSE</Value>
+                                <Name>CompareNetworkName</Name>
+                                <Description>Comapare exact network name</Description>
+                              </Parameter>
+                            </ParameterSection>
+                            <ParameterSection>
+                              <Name>Diagnosis</Name>
+                              <Description />
+                              <Parameter ParameterId="805502976" type="localTypes:StructStatistics" IndexInDevDesc="48">
+                                <Attributes channel="diag" offlineaccess="none" />
+                                <Value name="_x0038_05502976" visiblename="Statistics" offlineaccess="none">
+                                  <Element name="SendFrameCount" visiblename="SendFrameCount">0</Element>
+                                  <Element name="FramesPerSecond" visiblename="FramesPerSecond">0</Element>
+                                  <Element name="LostFrameCount" visiblename="LostFrameCount">0</Element>
+                                  <Element name="TxErrorCount" visiblename="TxErrorCount">0</Element>
+                                  <Element name="RxErrorCount" visiblename="RxErrorCount">0</Element>
+                                  <Element name="RecvAvg_Cycle" visiblename="Recv Time (Avg)" desc="Average Time for receiving Ethernet frames per paket" />
+                                  <Element name="RecvMax_Cycle" visiblename="Recv Time (Max)" desc="Max Time for receiving Ethernet frames per paket" />
+                                  <Element name="SendAvg_Cycle" visiblename="Send Time (Avg)" desc="Average Time for sending Ethernet frames per paket" />
+                                  <Element name="SendMax_Cycle" visiblename="Send Time (Max)" desc="Max Time for sending Ethernet frames per paket" />
+                                  <Element name="LostCycleCount" visiblename="LostCycleCount" desc="Number of lost iec cycles" />
+                                </Value>
+                                <Name>Statistics</Name>
+                              </Parameter>
+                              <Parameter ParameterId="805502977" type="std:BOOL" IndexInDevDesc="49">
+                                <Attributes channel="diagAck" />
+                                <Value name="_x0038_05502977" visiblename="Clear Statistics" desc="Clear Statistics">FALSE</Value>
+                                <Name>Clear Statistics</Name>
+                                <Description>Clear Statistics</Description>
+                              </Parameter>
+                            </ParameterSection>
+                            <Parameter ParameterId="805306368" type="std:DWORD" IndexInDevDesc="10">
+                              <Attributes />
+                              <Value name="_x0038_05306368" visiblename="Autoconfig" desc="Automatic configuration">1</Value>
+                              <Name>Autoconfig</Name>
+                              <Description>Automatic configuration</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805306369" type="std:BOOL" IndexInDevDesc="44">
+                              <Attributes download="false" offlineaccess="none" />
+                              <Value name="_x0038_05306369" visiblename="ShowLoggerPage" offlineaccess="none" desc="Show the logger page for the master">true</Value>
+                              <Name>ShowLoggerPage</Name>
+                              <Description>Show the logger page for the master</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805306371" type="std:BOOL" IndexInDevDesc="45">
+                              <Attributes download="false" offlineaccess="none" />
+                              <Value name="_x0038_05306371" visiblename="SupportMemoryService" offlineaccess="none" desc="Stack supports memory service">true</Value>
+                              <Name>SupportMemoryService</Name>
+                              <Description>Stack supports memory service</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805306375" type="std:BOOL" IndexInDevDesc="46">
+                              <Attributes download="false" offlineaccess="none" />
+                              <Value name="_x0038_05306375" visiblename="ShowSafetyChannels" offlineaccess="none" desc="if true then safety channels are shown and mappable">true</Value>
+                              <Name>ShowSafetyChannels</Name>
+                              <Description>if true then safety channels are shown and mappable</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805306377" type="std:BOOL" IndexInDevDesc="47">
+                              <Attributes download="false" offlineaccess="none" />
+                              <Value name="_x0038_05306377" visiblename="ShowSafetyConnections" offlineaccess="none" desc="if true then safety connections page is shown">true</Value>
+                              <Name>ShowSafetyConnections</Name>
+                              <Description>if true then safety connections page is shown</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805326848" type="std:DWORD" IndexInDevDesc="11">
+                              <Attributes />
+                              <Value name="_x0038_05326848" visiblename="MasterCycleTime" desc="Master Cycle Time">4000</Value>
+                              <Name>MasterCycleTime</Name>
+                              <Description>Master Cycle Time</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805371904" type="std:BOOL" IndexInDevDesc="12">
+                              <Attributes />
+                              <Value name="_x0038_05371904" visiblename="MasterUseLRW" desc="Master uses LRW command">FALSE</Value>
+                              <Name>MasterUseLRW</Name>
+                              <Description>Master uses LRW command</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805392384" type="std:BOOL" IndexInDevDesc="13">
+                              <Attributes />
+                              <Value name="_x0038_05392384" visiblename="SlaveAutorestart" desc="Slave restarts automatically">FALSE</Value>
+                              <Name>SlaveAutorestart</Name>
+                              <Description>Slave restarts automatically</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805392640" type="std:BOOL" IndexInDevDesc="41">
+                              <Attributes />
+                              <Value name="_x0038_05392640" visiblename="Keep last input data" desc="Keep last input data">FALSE</Value>
+                              <Name>Keep last input data</Name>
+                              <Description>Keep last input data</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805392650" type="std:BOOL" IndexInDevDesc="42">
+                              <Attributes />
+                              <Value name="_x0038_05392650" visiblename="OnlyArpBroadcasts" desc="true: transmit only ARP broadcasts, false: transmit all broadcasts">TRUE</Value>
+                              <Name>OnlyArpBroadcasts</Name>
+                              <Description>true: transmit only ARP broadcasts, false: transmit all broadcasts</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805437440" type="std:USINT" IndexInDevDesc="14">
+                              <Attributes />
+                              <Value name="_x0038_05437440" visiblename="SlaveCheckMode" desc="Mode for vendor product check">0</Value>
+                              <Name>SlaveCheckMode</Name>
+                              <Description>Mode for vendor product check</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805437441" type="std:BOOL" IndexInDevDesc="15">
+                              <Attributes />
+                              <Value name="_x0038_05437441" visiblename="CheckPortStatus" desc="Check of the port status of last slave">FALSE</Value>
+                              <Name>CheckPortStatus</Name>
+                              <Description>Check of the port status of last slave</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805457920" type="std:STRING(100)" IndexInDevDesc="16">
+                              <Attributes />
+                              <Value name="_x0038_05457920" visiblename="NetworkName" desc="Name of the network card">'eth0'</Value>
+                              <Name>NetworkName</Name>
+                              <Description>Name of the network card</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805457921" type="std:WSTRING(100)" IndexInDevDesc="17">
+                              <Attributes />
+                              <Value name="_x0038_05457921" visiblename="NetworkName" desc="Name of the network card">"eth0"</Value>
+                              <Name>NetworkName</Name>
+                              <Description>Name of the network card</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805458176" type="std:BOOL" IndexInDevDesc="18">
+                              <Attributes />
+                              <Value name="_x0038_05458176" visiblename="SelectNetworkByName" desc="Select network by name">FALSE</Value>
+                              <Name>SelectNetworkByName</Name>
+                              <Description>Select network by name</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805458177" type="std:BOOL" IndexInDevDesc="19">
+                              <Attributes />
+                              <Value name="_x0038_05458177" visiblename="CompareNetworkName" desc="Comapare exact network name">FALSE</Value>
+                              <Name>CompareNetworkName</Name>
+                              <Description>Comapare exact network name</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805458432" type="std:BOOL" IndexInDevDesc="20">
+                              <Attributes />
+                              <Value name="_x0038_05458432" visiblename="EnableTaskMessage" desc="Enable transmission per task">FALSE</Value>
+                              <Name>EnableTaskMessage</Name>
+                              <Description>Enable transmission per task</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805458688" type="std:BOOL" IndexInDevDesc="21">
+                              <Attributes />
+                              <Value name="_x0038_05458688" visiblename="DisableTaskGeneration" desc="Disable automatic task generation">FALSE</Value>
+                              <Name>DisableTaskGeneration</Name>
+                              <Description>Disable automatic task generation</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805458944" type="std:BOOL" IndexInDevDesc="22">
+                              <Attributes />
+                              <Value name="_x0038_05458944" visiblename="FrameAtTaskStart" desc="Send frame at task cycle start">FALSE</Value>
+                              <Name>FrameAtTaskStart</Name>
+                              <Description>Send frame at task cycle start</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805458960" type="std:BOOL" IndexInDevDesc="23">
+                              <Attributes />
+                              <Value name="_x0038_05458960" visiblename="WaitForPacket" desc="Wait for packets in the same cycle/ FrameAtTaskStart must be also set">FALSE</Value>
+                              <Name>WaitForPacket</Name>
+                              <Description>Wait for packets in the same cycle/ FrameAtTaskStart must be also set</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805458968" type="std:BOOL" IndexInDevDesc="24">
+                              <Attributes />
+                              <Value name="_x0038_05458968" visiblename="SplitFrame" desc="Splits cylic frames in process data and asynchronous messages">FALSE</Value>
+                              <Name>SplitFrame</Name>
+                              <Description>Splits cylic frames in process data and asynchronous messages</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805459200" type="std:BOOL" IndexInDevDesc="26">
+                              <Attributes />
+                              <Value name="_x0038_05459200" visiblename="ScanForAliasAddress" desc="Enables scan for alias address">TRUE</Value>
+                              <Name>ScanForAliasAddress</Name>
+                              <Description>Enables scan for alias address</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805459280" type="std:WORD" IndexInDevDesc="25">
+                              <Attributes />
+                              <Value name="_x0038_05459280" visiblename="DCSyncInWindow" desc="sync window for xDistributedClockInSync">50</Value>
+                              <Name>DCSyncInWindow</Name>
+                              <Description>sync window for xDistributedClockInSync</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805459456" type="std:SINT" IndexInDevDesc="27">
+                              <Attributes />
+                              <Value name="_x0038_05459456" visiblename="SyncOffset" desc="Master synchronisation offset">20</Value>
+                              <Name>SyncOffset</Name>
+                              <Description>Master synchronisation offset</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805459712" type="std:UDINT" IndexInDevDesc="28">
+                              <Attributes />
+                              <Value name="_x0038_05459712" visiblename="SyncWindowMonitoring" desc="Slave sync window monitoring">0</Value>
+                              <Name>SyncWindowMonitoring</Name>
+                              <Description>Slave sync window monitoring</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805459713" type="std:UDINT" IndexInDevDesc="29">
+                              <Attributes download="false" offlineaccess="none" />
+                              <Value name="_x0038_05459713" visiblename="DCMode" offlineaccess="none" desc="Mode for distributed clock">0</Value>
+                              <Name>DCMode</Name>
+                              <Description>Mode for distributed clock</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805459968" type="std:BOOL" IndexInDevDesc="37">
+                              <Attributes download="false" offlineaccess="none" />
+                              <Value name="_x0038_05459968" visiblename="CustomENIExport" offlineaccess="none" desc="Export ENI file with custom settings">FALSE</Value>
+                              <Name>CustomENIExport</Name>
+                              <Description>Export ENI file with custom settings</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805459969" type="std:BOOL" IndexInDevDesc="38">
+                              <Attributes download="false" offlineaccess="none" />
+                              <Value name="_x0038_05459969" visiblename="IgnoreManualAddres" offlineaccess="none" desc="Ignore manual address settings in the ENI export">FALSE</Value>
+                              <Name>IgnoreManualAddres</Name>
+                              <Description>Ignore manual address settings in the ENI export</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805459974" type="std:BOOL" IndexInDevDesc="39">
+                              <Attributes download="false" offlineaccess="none" />
+                              <Value name="_x0038_05459974" visiblename="CreateENIFileForSimulation" offlineaccess="none" desc="Creates ENI xml file for simulation devices">TRUE</Value>
+                              <Name>CreateENIFileForSimulation</Name>
+                              <Description>Creates ENI xml file for simulation devices</Description>
+                            </Parameter>
+                            <Parameter ParameterId="805459984" type="std:BOOL" IndexInDevDesc="40">
+                              <Attributes offlineaccess="none" />
+                              <Value name="_x0038_05459984" visiblename="Enable sync units" offlineaccess="none" desc="Enable support for sync units">TRUE</Value>
+                              <Name>Enable sync units</Name>
+                              <Description>Enable support for sync units</Description>
+                            </Parameter>
+                            <Parameter ParameterId="1073741826" type="std:DWORD" IndexInDevDesc="0">
+                              <Attributes />
+                              <Value name="_x0031_073741826" visiblename="NumberOfOutputSlaves" desc="Number of Slaves with an Output">0</Value>
+                              <Name>NumberOfOutputSlaves</Name>
+                              <Description>Number of Slaves with an Output</Description>
+                            </Parameter>
+                            <Parameter ParameterId="1073741827" type="std:DWORD" IndexInDevDesc="1">
+                              <Attributes />
+                              <Value name="_x0031_073741827" visiblename="NumberOfInputSlaves" desc="Number of Slaves with an Input">0</Value>
+                              <Name>NumberOfInputSlaves</Name>
+                              <Description>Number of Slaves with an Input</Description>
+                            </Parameter>
+                            <Parameter ParameterId="1073741829" type="std:DWORD" IndexInDevDesc="2">
+                              <Attributes />
+                              <Value name="_x0031_073741829" visiblename="SrcAddress1" desc="Two zero Bytes and the First Two Bytes of the Source Address">58463</Value>
+                              <Name>SrcAddress1</Name>
+                              <Description>Two zero Bytes and the First Two Bytes of the Source Address</Description>
+                            </Parameter>
+                            <Parameter ParameterId="1073741830" type="std:DWORD" IndexInDevDesc="3">
+                              <Attributes />
+                              <Value name="_x0031_073741830" visiblename="SrcAddress2" desc="Lower 4 Bytes of the Source Address">33171563</Value>
+                              <Name>SrcAddress2</Name>
+                              <Description>Lower 4 Bytes of the Source Address</Description>
+                            </Parameter>
+                            <Parameter ParameterId="1073741831" type="std:DWORD" IndexInDevDesc="4">
+                              <Attributes />
+                              <Value name="_x0031_073741831" visiblename="DestAddress1" desc="Two zero Bytes and the First Two Bytes of the Destination Address">65535</Value>
+                              <Name>DestAddress1</Name>
+                              <Description>Two zero Bytes and the First Two Bytes of the Destination Address</Description>
+                            </Parameter>
+                            <Parameter ParameterId="1073741832" type="std:DWORD" IndexInDevDesc="5">
+                              <Attributes />
+                              <Value name="_x0031_073741832" visiblename="DestAddress2" desc="Lower 4 Bytes of the Destination Address">4294967295</Value>
+                              <Name>DestAddress2</Name>
+                              <Description>Lower 4 Bytes of the Destination Address</Description>
+                            </Parameter>
+                            <Parameter ParameterId="1073741833" type="std:DWORD" IndexInDevDesc="6">
+                              <Attributes />
+                              <Value name="_x0031_073741833" visiblename="ImageOutAddress" desc="Address of the Output">33554432</Value>
+                              <Name>ImageOutAddress</Name>
+                              <Description>Address of the Output</Description>
+                            </Parameter>
+                            <Parameter ParameterId="1073741834" type="std:DWORD" IndexInDevDesc="7">
+                              <Attributes />
+                              <Value name="_x0031_073741834" visiblename="ImageOutLength" desc="Length of the Output">0</Value>
+                              <Name>ImageOutLength</Name>
+                              <Description>Length of the Output</Description>
+                            </Parameter>
+                            <Parameter ParameterId="1073741835" type="std:DWORD" IndexInDevDesc="8">
+                              <Attributes />
+                              <Value name="_x0031_073741835" visiblename="ImageInAddress" desc="Address of the Input">16777216</Value>
+                              <Name>ImageInAddress</Name>
+                              <Description>Address of the Input</Description>
+                            </Parameter>
+                            <Parameter ParameterId="1073741836" type="std:DWORD" IndexInDevDesc="9">
+                              <Attributes />
+                              <Value name="_x0031_073741836" visiblename="ImageInLength" desc="Length of the Input">0</Value>
+                              <Name>ImageInLength</Name>
+                              <Description>Length of the Input</Description>
+                            </Parameter>
+                            <Parameter ParameterId="1879052288" type="std:UDINT" IndexInDevDesc="43">
+                              <Attributes download="false" offlineaccess="none" />
+                              <Value name="_x0031_879052288" visiblename="Config version" offlineaccess="none" desc="Config version">50662144</Value>
+                              <Name>Config version</Name>
+                              <Description>Config version</Description>
+                            </Parameter>
+                          </HostParameterSet>
+                        </Connector>
+                        <DeviceParameterSet />
+                      </DeviceType>
+                    </Device>
+                  </data>
+                  <data name="configurations" handleUnknown="discard">
+                    <configurations>
+                      <configuration name="EP6224_0002">
+                        <addData>
+                          <data name="Device" handleUnknown="discard">
+                            <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+                              <DeviceType>
+                                <DeviceIdentification>
+                                  <Type>65</Type>
+                                  <Id>2_1850405200100002</Id>
+                                  <Version>Revision=16#00100002</Version>
+                                </DeviceIdentification>
+                                <Connector moduleType="65" role="child" interface="Common.Ethercat" connectorId="1">
+                                  <HostParameterSet>
+                                    <ParameterSection>
+                                      <Name>General</Name>
+                                      <Description />
+                                      <Parameter ParameterId="805306384" type="std:BOOL" IndexInDevDesc="5">
+                                        <Attributes />
+                                        <Value name="_x0038_05306384" visiblename="CheckProductID" desc="CheckProductID">TRUE</Value>
+                                        <Name>CheckProductID</Name>
+                                        <Description>CheckProductID</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="805306400" type="std:BOOL" IndexInDevDesc="6">
+                                        <Attributes />
+                                        <Value name="_x0038_05306400" visiblename="CheckVendorID">TRUE</Value>
+                                        <Name>CheckVendorID</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="805306408" type="std:BYTE" IndexInDevDesc="7">
+                                        <Attributes />
+                                        <Value name="_x0038_05306408" visiblename="CheckRevisionNbr" desc="CheckVendorID">2</Value>
+                                        <Name>CheckRevisionNbr</Name>
+                                        <Description>CheckVendorID</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="805306416" type="std:DWORD" IndexInDevDesc="20">
+                                        <Attributes />
+                                        <Value name="_x0038_05306416" visiblename="Timeout SDO Access" desc="Timeout SDO Access">2000</Value>
+                                        <Name>Timeout SDO Access</Name>
+                                        <Description>Timeout SDO Access</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="805306432" type="std:DWORD" IndexInDevDesc="18">
+                                        <Attributes />
+                                        <Value name="_x0038_05306432" visiblename="Timeout Init to Preop" desc="Timeout Init to Preop">3000</Value>
+                                        <Name>Timeout Init to Preop</Name>
+                                        <Description>Timeout Init to Preop</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="805306448" type="std:DWORD" IndexInDevDesc="19">
+                                        <Attributes />
+                                        <Value name="_x0038_05306448" visiblename="Timeout Preop to Safeop, SafeOp to Op" desc="Timeout Preop to Safeop, SafeOp to Op">10000</Value>
+                                        <Name>Timeout Preop to Safeop, SafeOp to Op</Name>
+                                        <Description>Timeout Preop to Safeop, SafeOp to Op</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="805306464" type="std:DWORD" IndexInDevDesc="21">
+                                        <Attributes />
+                                        <Value name="_x0038_05306464" visiblename="Timeout Back to Init" desc="Timeout Back to Init">5000</Value>
+                                        <Name>Timeout Back to Init</Name>
+                                        <Description>Timeout Back to Init</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="805306480" type="std:DWORD" IndexInDevDesc="22">
+                                        <Attributes />
+                                        <Value name="_x0038_05306480" visiblename="Timeout Back to SafeOp" desc="Timeout Back to SafeOp">200</Value>
+                                        <Name>Timeout Back to SafeOp</Name>
+                                        <Description>Timeout Back to SafeOp</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="805306624" type="std:ARRAY[0..7] OF BYTE" IndexInDevDesc="23">
+                                        <Attributes />
+                                        <Value name="_x0038_05306624" visiblename="Bootstrap config data" desc="Bootstrap config data">[16#0,16#10,16#F4,16#0,16#F4,16#10,16#F4,16#0]</Value>
+                                        <Name>Bootstrap config data</Name>
+                                        <Description>Bootstrap config data</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="805306673" type="std:WORD" IndexInDevDesc="15">
+                                        <Attributes download="false" offlineaccess="read" />
+                                        <Value name="_x0038_05306673" visiblename="Max slot count" offlineaccess="read">7</Value>
+                                        <Name>Max slot count</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="805306688" type="localTypes:MailboxCapabilities" IndexInDevDesc="14">
+                                        <Attributes download="false" offlineaccess="read" />
+                                        <Value name="_x0038_05306688" visiblename="Mailbox capabilities" offlineaccess="read">
+                                          <Element name="HasCoE" visiblename="HasCoE">True</Element>
+                                          <Element name="HasSoE" visiblename="HasSoE">False</Element>
+                                          <Element name="HasAoE" visiblename="HasAoE">True</Element>
+                                          <Element name="HasEoE" visiblename="HasEoE">False</Element>
+                                          <Element name="HasFoE" visiblename="HasFoE">True</Element>
+                                          <Element name="HasVoE" visiblename="HasVoE">False</Element>
+                                          <Element name="NbrChannels" visiblename="NbrChannels">4</Element>
+                                          <Element name="Profiles" visiblename="Profiles">[5001]</Element>
+                                        </Value>
+                                        <Name>Mailbox capabilities</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="805371904" type="std:BOOL" IndexInDevDesc="24">
+                                        <Attributes />
+                                        <Value name="_x0038_05371904" visiblename="PDOAssign" desc="PDOAssign">TRUE</Value>
+                                        <Name>PDOAssign</Name>
+                                        <Description>PDOAssign</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="805392384" type="std:BOOL" IndexInDevDesc="25">
+                                        <Attributes />
+                                        <Value name="_x0038_05392384" visiblename="PDOConfig" desc="PDOConfig">TRUE</Value>
+                                        <Name>PDOConfig</Name>
+                                        <Description>PDOConfig</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="805412864" type="std:BOOL" IndexInDevDesc="26">
+                                        <Attributes />
+                                        <Value name="_x0038_05412864" visiblename="CompleteAccess" desc="CompleteAccess">TRUE</Value>
+                                        <Name>CompleteAccess</Name>
+                                        <Description>CompleteAccess</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1074796544" type="std:DWORD" IndexInDevDesc="2">
+                                        <Attributes />
+                                        <Value name="_x0031_074796544" visiblename="Number of Identity Parameters" desc="Number of Identity Parameters">4</Value>
+                                        <Name>Number of Identity Parameters</Name>
+                                        <Description>Number of Identity Parameters</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1074796545" type="std:DWORD" IndexInDevDesc="3">
+                                        <Attributes />
+                                        <Value name="_x0031_074796545" visiblename="Vendor Id of the Slave" desc="Vendor Id of the Slave">2</Value>
+                                        <Name>Vendor Id of the Slave</Name>
+                                        <Description>Vendor Id of the Slave</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1074796546" type="std:DWORD" IndexInDevDesc="4">
+                                        <Attributes />
+                                        <Value name="_x0031_074796546" visiblename="Product Code of the Slave" desc="Product Code of the Slave">407912530</Value>
+                                        <Name>Product Code of the Slave</Name>
+                                        <Description>Product Code of the Slave</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1074796547" type="std:DWORD" IndexInDevDesc="8">
+                                        <Attributes />
+                                        <Value name="_x0031_074796547" visiblename="Revision Number of the Slave" desc="Revision Number of the Slave">1048578</Value>
+                                        <Name>Revision Number of the Slave</Name>
+                                        <Description>Revision Number of the Slave</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1074796548" type="std:DWORD" IndexInDevDesc="9">
+                                        <Attributes />
+                                        <Value name="_x0031_074796548" visiblename="Serialnumber of the Slave" desc="Serialnumber of the Slave">0</Value>
+                                        <Name>Serialnumber of the Slave</Name>
+                                        <Description>Serialnumber of the Slave</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1074797064" type="std:STRING" IndexInDevDesc="13">
+                                        <Attributes download="false" offlineaccess="read" />
+                                        <Value name="_x0031_074797064" visiblename="Device URL" offlineaccess="read" desc="https://www.beckhoff.de/EP6224-0002">'https://www.beckhoff.com/EP6224-0002'</Value>
+                                        <Name>Device URL</Name>
+                                        <Description>https://www.beckhoff.de/EP6224-0002</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1074855936" type="std:DWORD" IndexInDevDesc="10">
+                                        <Attributes />
+                                        <Value name="_x0031_074855936" visiblename="Physical Address of the Slave" desc="Physical Address of the Slave">0</Value>
+                                        <Name>Physical Address of the Slave</Name>
+                                        <Description>Physical Address of the Slave</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1074855937" type="std:DWORD" IndexInDevDesc="11">
+                                        <Attributes />
+                                        <Value name="_x0031_074855937" visiblename="AutoIncr Address of the Slave" desc="AutoIncr Address of the Slave">0</Value>
+                                        <Name>AutoIncr Address of the Slave</Name>
+                                        <Description>AutoIncr Address of the Slave</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1074855938" type="std:WORD">
+                                        <Attributes />
+                                        <Value name="_x0031_074855938" visiblename="StationAlias">0</Value>
+                                        <Name>StationAlias</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1074855984" type="std:STRING(255)" IndexInDevDesc="16">
+                                        <Attributes channel="diag" offlineaccess="none" />
+                                        <Value name="_x0031_074855984" visiblename="Diag String" offlineaccess="none" />
+                                        <Name>Diag String</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1074855985" type="std:BOOL" IndexInDevDesc="17">
+                                        <Attributes channel="diagAck" offlineaccess="none" />
+                                        <Value name="_x0031_074855985" visiblename="Diag Acknowledge" offlineaccess="none">FALSE</Value>
+                                        <Name>Diag Acknowledge</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1074856000" type="std:UINT" IndexInDevDesc="12">
+                                        <Attributes />
+                                        <Value name="_x0031_074856000" visiblename="LinkDelayTimeoutPortB" desc="LinkDelayTimeoutPortB">1000</Value>
+                                        <Name>LinkDelayTimeoutPortB</Name>
+                                        <Description>LinkDelayTimeoutPortB</Description>
+                                      </Parameter>
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>Distributed_Clocks</Name>
+                                      <Description />
+                                      <Parameter ParameterId="1610633216" type="std:DWORD" IndexInDevDesc="28">
+                                        <Attributes />
+                                        <Value name="_x0031_610633216" visiblename="DC sync0 cycletime" desc="DC sync0 cycletime">4000</Value>
+                                        <Name>DC sync0 cycletime</Name>
+                                        <Description>DC sync0 cycletime</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1610678272" type="std:BOOL" IndexInDevDesc="29">
+                                        <Attributes />
+                                        <Value name="_x0031_610678272" visiblename="DC enable" desc="DC enable">FALSE</Value>
+                                        <Name>DC enable</Name>
+                                        <Description>DC enable</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1610698752" type="std:BOOL" IndexInDevDesc="30">
+                                        <Attributes />
+                                        <Value name="_x0031_610698752" visiblename="DC sync0 enable" desc="DC sync0 enable">FALSE</Value>
+                                        <Name>DC sync0 enable</Name>
+                                        <Description>DC sync0 enable</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1610764288" type="std:DWORD" IndexInDevDesc="32">
+                                        <Attributes />
+                                        <Value name="_x0031_610764288" visiblename="DC sync1 cycletime" desc="DC sync1 cycletime">4000</Value>
+                                        <Name>DC sync1 cycletime</Name>
+                                        <Description>DC sync1 cycletime</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1610809344" type="std:BOOL" IndexInDevDesc="31">
+                                        <Attributes />
+                                        <Value name="_x0031_610809344" visiblename="DC sync1 enable" desc="DC sync1 enable">FALSE</Value>
+                                        <Name>DC sync1 enable</Name>
+                                        <Description>DC sync1 enable</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1610833920" type="std:WORD" IndexInDevDesc="27">
+                                        <Attributes download="false" offlineaccess="none" onlineaccess="none" />
+                                        <Value name="_x0031_610833920" visiblename="DCSetting" offlineaccess="none" onlineaccess="none">0</Value>
+                                        <Name>DCSetting</Name>
+                                      </Parameter>
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>RxPDO</Name>
+                                      <Description />
+                                      <ParameterSection>
+                                        <Name>RxPDO1</Name>
+                                        <Description />
+                                        <ParameterSection>
+                                          <Name>Process data</Name>
+                                          <Description />
+                                          <Parameter ParameterId="1879048194" type="localTypes:Entry">
+                                            <Attributes />
+                                            <Value name="_x0031_879048194" visiblename="Process data">
+                                              <Element name="Index" visiblename="Index" desc="Index">16#7000</Element>
+                                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">1</Element>
+                                              <Element name="Size" visiblename="Size" desc="Size">1</Element>
+                                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                                            </Value>
+                                            <Name>Process data</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1880096770" type="localTypes:PDO_Information">
+                                            <Attributes download="false" onlineaccess="none" />
+                                            <Value name="_x0031_880096770" visiblename="Process data" onlineaccess="none">
+                                              <Element name="Name" visiblename="Name" desc="Name">'Process data'</Element>
+                                              <Element name="DataType" visiblename="DataType" desc="DataType">'BIT'</Element>
+                                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                                            </Value>
+                                            <Name>Process data</Name>
+                                          </Parameter>
+                                        </ParameterSection>
+                                        <ParameterSection>
+                                          <Name>Entry</Name>
+                                          <Description />
+                                          <Parameter ParameterId="1879048195" type="localTypes:Entry">
+                                            <Attributes />
+                                            <Value name="_x0031_879048195" visiblename="Entry">
+                                              <Element name="Index" visiblename="Index" desc="Index">16#0000</Element>
+                                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">0</Element>
+                                              <Element name="Size" visiblename="Size" desc="Size">7</Element>
+                                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                                            </Value>
+                                            <Name>Entry</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1879048196" type="localTypes:Entry">
+                                            <Attributes />
+                                            <Value name="_x0031_879048196" visiblename="Entry">
+                                              <Element name="Index" visiblename="Index" desc="Index">16#0000</Element>
+                                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">0</Element>
+                                              <Element name="Size" visiblename="Size" desc="Size">8</Element>
+                                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                                            </Value>
+                                            <Name>Entry</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1880096771" type="localTypes:PDO_Information">
+                                            <Attributes download="false" onlineaccess="none" />
+                                            <Value name="_x0031_880096771" visiblename="Entry" onlineaccess="none">
+                                              <Element name="Name" visiblename="Name" desc="Name">''</Element>
+                                              <Element name="DataType" visiblename="DataType" desc="DataType">'ARRAY [0..6] OF BIT'</Element>
+                                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                                            </Value>
+                                            <Name>Entry</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1880096772" type="localTypes:PDO_Information">
+                                            <Attributes download="false" onlineaccess="none" />
+                                            <Value name="_x0031_880096772" visiblename="Entry" onlineaccess="none">
+                                              <Element name="Name" visiblename="Name" desc="Name">''</Element>
+                                              <Element name="DataType" visiblename="DataType" desc="DataType">'ARRAY [0..7] OF BIT'</Element>
+                                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                                            </Value>
+                                            <Name>Entry</Name>
+                                          </Parameter>
+                                        </ParameterSection>
+                                        <Parameter ParameterId="1879048192" type="localTypes:RxTxPdo">
+                                          <Attributes />
+                                          <Value name="_x0031_879048192" visiblename="RxTxPdo">
+                                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                                            <Element name="NumberofEntries" visiblename="NumberofEntries">3</Element>
+                                            <Element name="Index" visiblename="Index">16#1600</Element>
+                                            <Element name="Fixed" visiblename="Fixed">False</Element>
+                                            <Element name="Mandatory" visiblename="Mandatory">True</Element>
+                                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                                            <Element name="Sm" visiblename="Sm">2</Element>
+                                            <Element name="Su" visiblename="Su">0</Element>
+                                            <Element name="Name" visiblename="Name">'IO-Link Port1'</Element>
+                                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule">True</Element>
+                                            <Element name="SafetyPDOTypeMaster" visiblename="SafetyPDOTypeMaster" />
+                                            <Element name="SafetyPDOTypeSlave" visiblename="SafetyPDOTypeSlave" />
+                                          </Value>
+                                          <Name>RxTxPdo</Name>
+                                        </Parameter>
+                                      </ParameterSection>
+                                      <ParameterSection>
+                                        <Name>RxPDO2</Name>
+                                        <Description />
+                                        <ParameterSection>
+                                          <Name>Process data</Name>
+                                          <Description />
+                                        </ParameterSection>
+                                        <ParameterSection>
+                                          <Name>Entry</Name>
+                                          <Description />
+                                        </ParameterSection>
+                                        <Parameter ParameterId="1879048448" type="localTypes:RxTxPdo">
+                                          <Attributes />
+                                          <Value name="_x0031_879048448" visiblename="RxTxPdo">
+                                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                                            <Element name="NumberofEntries" visiblename="NumberofEntries">0</Element>
+                                            <Element name="Index" visiblename="Index">16#1601</Element>
+                                            <Element name="Fixed" visiblename="Fixed">False</Element>
+                                            <Element name="Mandatory" visiblename="Mandatory">True</Element>
+                                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                                            <Element name="Sm" visiblename="Sm">2</Element>
+                                            <Element name="Su" visiblename="Su">0</Element>
+                                            <Element name="Name" visiblename="Name">'IO-Link Port2'</Element>
+                                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule">True</Element>
+                                            <Element name="SafetyPDOTypeMaster" visiblename="SafetyPDOTypeMaster" />
+                                            <Element name="SafetyPDOTypeSlave" visiblename="SafetyPDOTypeSlave" />
+                                          </Value>
+                                          <Name>RxTxPdo</Name>
+                                        </Parameter>
+                                      </ParameterSection>
+                                      <ParameterSection>
+                                        <Name>RxPDO3</Name>
+                                        <Description />
+                                        <Parameter ParameterId="1879048704" type="localTypes:RxTxPdo">
+                                          <Attributes />
+                                          <Value name="_x0031_879048704" visiblename="RxTxPdo">
+                                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                                            <Element name="NumberofEntries" visiblename="NumberofEntries">0</Element>
+                                            <Element name="Index" visiblename="Index">16#1602</Element>
+                                            <Element name="Fixed" visiblename="Fixed">False</Element>
+                                            <Element name="Mandatory" visiblename="Mandatory">True</Element>
+                                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                                            <Element name="Sm" visiblename="Sm">2</Element>
+                                            <Element name="Su" visiblename="Su">0</Element>
+                                            <Element name="Name" visiblename="Name">'IO-Link Port3'</Element>
+                                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule">True</Element>
+                                            <Element name="SafetyPDOTypeMaster" visiblename="SafetyPDOTypeMaster" />
+                                            <Element name="SafetyPDOTypeSlave" visiblename="SafetyPDOTypeSlave" />
+                                          </Value>
+                                          <Name>RxTxPdo</Name>
+                                        </Parameter>
+                                      </ParameterSection>
+                                      <ParameterSection>
+                                        <Name>RxPDO4</Name>
+                                        <Description />
+                                        <Parameter ParameterId="1879048960" type="localTypes:RxTxPdo">
+                                          <Attributes />
+                                          <Value name="_x0031_879048960" visiblename="RxTxPdo">
+                                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                                            <Element name="NumberofEntries" visiblename="NumberofEntries">0</Element>
+                                            <Element name="Index" visiblename="Index">16#1603</Element>
+                                            <Element name="Fixed" visiblename="Fixed">False</Element>
+                                            <Element name="Mandatory" visiblename="Mandatory">True</Element>
+                                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                                            <Element name="Sm" visiblename="Sm">2</Element>
+                                            <Element name="Su" visiblename="Su">0</Element>
+                                            <Element name="Name" visiblename="Name">'IO-Link Port4'</Element>
+                                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule">True</Element>
+                                            <Element name="SafetyPDOTypeMaster" visiblename="SafetyPDOTypeMaster" />
+                                            <Element name="SafetyPDOTypeSlave" visiblename="SafetyPDOTypeSlave" />
+                                          </Value>
+                                          <Name>RxTxPdo</Name>
+                                        </Parameter>
+                                      </ParameterSection>
+                                      <Parameter ParameterId="1342504960" type="std:DWORD" IndexInDevDesc="33">
+                                        <Attributes />
+                                        <Value name="_x0031_342504960" visiblename="Number of RxPDOs of the Slave" desc="Number of RxPDOs of the Slave">4</Value>
+                                        <Name>Number of RxPDOs of the Slave</Name>
+                                        <Description>Number of RxPDOs of the Slave</Description>
+                                      </Parameter>
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>TxPDO</Name>
+                                      <Description />
+                                      <ParameterSection>
+                                        <Name>TxPDO1</Name>
+                                        <Description />
+                                        <ParameterSection>
+                                          <Name>Entry</Name>
+                                          <Description />
+                                          <Parameter ParameterId="1879375874" type="localTypes:Entry">
+                                            <Attributes />
+                                            <Value name="_x0031_879375874" visiblename="Entry">
+                                              <Element name="Index" visiblename="Index" desc="Index">16#0000</Element>
+                                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">0</Element>
+                                              <Element name="Size" visiblename="Size" desc="Size">8</Element>
+                                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                                            </Value>
+                                            <Name>Entry</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1879375875" type="localTypes:Entry">
+                                            <Attributes />
+                                            <Value name="_x0031_879375875" visiblename="Entry">
+                                              <Element name="Index" visiblename="Index" desc="Index">16#0000</Element>
+                                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">0</Element>
+                                              <Element name="Size" visiblename="Size" desc="Size">4</Element>
+                                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                                            </Value>
+                                            <Name>Entry</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1879375877" type="localTypes:Entry">
+                                            <Attributes />
+                                            <Value name="_x0031_879375877" visiblename="Entry">
+                                              <Element name="Index" visiblename="Index" desc="Index">16#0000</Element>
+                                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">0</Element>
+                                              <Element name="Size" visiblename="Size" desc="Size">2</Element>
+                                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                                            </Value>
+                                            <Name>Entry</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1880424450" type="localTypes:PDO_Information">
+                                            <Attributes download="false" onlineaccess="none" />
+                                            <Value name="_x0031_880424450" visiblename="Entry" onlineaccess="none">
+                                              <Element name="Name" visiblename="Name" desc="Name">''</Element>
+                                              <Element name="DataType" visiblename="DataType" desc="DataType">'ARRAY [0..7] OF BIT'</Element>
+                                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                                            </Value>
+                                            <Name>Entry</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1880424451" type="localTypes:PDO_Information">
+                                            <Attributes download="false" onlineaccess="none" />
+                                            <Value name="_x0031_880424451" visiblename="Entry" onlineaccess="none">
+                                              <Element name="Name" visiblename="Name" desc="Name">''</Element>
+                                              <Element name="DataType" visiblename="DataType" desc="DataType">'ARRAY [0..3] OF BIT'</Element>
+                                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                                            </Value>
+                                            <Name>Entry</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1880424453" type="localTypes:PDO_Information">
+                                            <Attributes download="false" onlineaccess="none" />
+                                            <Value name="_x0031_880424453" visiblename="Entry" onlineaccess="none">
+                                              <Element name="Name" visiblename="Name" desc="Name">''</Element>
+                                              <Element name="DataType" visiblename="DataType" desc="DataType">'ARRAY [0..1] OF BIT'</Element>
+                                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                                            </Value>
+                                            <Name>Entry</Name>
+                                          </Parameter>
+                                        </ParameterSection>
+                                        <ParameterSection>
+                                          <Name>Device Diag</Name>
+                                          <Description />
+                                          <Parameter ParameterId="1879375876" type="localTypes:Entry">
+                                            <Attributes />
+                                            <Value name="_x0031_879375876" visiblename="Device Diag">
+                                              <Element name="Index" visiblename="Index" desc="Index">16#F101</Element>
+                                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">13</Element>
+                                              <Element name="Size" visiblename="Size" desc="Size">1</Element>
+                                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                                            </Value>
+                                            <Name>Device Diag</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1880424452" type="localTypes:PDO_Information">
+                                            <Attributes download="false" onlineaccess="none" />
+                                            <Value name="_x0031_880424452" visiblename="Device Diag" onlineaccess="none">
+                                              <Element name="Name" visiblename="Name" desc="Name">'Device Diag'</Element>
+                                              <Element name="DataType" visiblename="DataType" desc="DataType">'BIT'</Element>
+                                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                                            </Value>
+                                            <Name>Device Diag</Name>
+                                          </Parameter>
+                                        </ParameterSection>
+                                        <ParameterSection>
+                                          <Name>Device State</Name>
+                                          <Description />
+                                          <Parameter ParameterId="1879375878" type="localTypes:Entry">
+                                            <Attributes />
+                                            <Value name="_x0031_879375878" visiblename="Device State">
+                                              <Element name="Index" visiblename="Index" desc="Index">16#F101</Element>
+                                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">16</Element>
+                                              <Element name="Size" visiblename="Size" desc="Size">1</Element>
+                                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                                            </Value>
+                                            <Name>Device State</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1880424454" type="localTypes:PDO_Information">
+                                            <Attributes download="false" onlineaccess="none" />
+                                            <Value name="_x0031_880424454" visiblename="Device State" onlineaccess="none">
+                                              <Element name="Name" visiblename="Name" desc="Name">'Device State'</Element>
+                                              <Element name="DataType" visiblename="DataType" desc="DataType">'BIT'</Element>
+                                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                                            </Value>
+                                            <Name>Device State</Name>
+                                          </Parameter>
+                                        </ParameterSection>
+                                        <Parameter ParameterId="1879375872" type="localTypes:RxTxPdo">
+                                          <Attributes />
+                                          <Value name="_x0031_879375872" visiblename="RxTxPdo">
+                                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                                            <Element name="NumberofEntries" visiblename="NumberofEntries">5</Element>
+                                            <Element name="Index" visiblename="Index">16#1A05</Element>
+                                            <Element name="Fixed" visiblename="Fixed">True</Element>
+                                            <Element name="Mandatory" visiblename="Mandatory">True</Element>
+                                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                                            <Element name="Sm" visiblename="Sm">3</Element>
+                                            <Element name="Su" visiblename="Su">0</Element>
+                                            <Element name="Name" visiblename="Name">'DeviceState Inputs Device'</Element>
+                                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule" />
+                                            <Element name="SafetyPDOTypeMaster" visiblename="SafetyPDOTypeMaster" />
+                                            <Element name="SafetyPDOTypeSlave" visiblename="SafetyPDOTypeSlave" />
+                                          </Value>
+                                          <Name>RxTxPdo</Name>
+                                        </Parameter>
+                                      </ParameterSection>
+                                      <ParameterSection>
+                                        <Name>TxPDO2</Name>
+                                        <Description />
+                                        <ParameterSection>
+                                          <Name>State Ch1</Name>
+                                          <Description />
+                                          <Parameter ParameterId="1879376130" type="localTypes:Entry">
+                                            <Attributes />
+                                            <Value name="_x0031_879376130" visiblename="State Ch1">
+                                              <Element name="Index" visiblename="Index" desc="Index">16#F100</Element>
+                                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">1</Element>
+                                              <Element name="Size" visiblename="Size" desc="Size">8</Element>
+                                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                                            </Value>
+                                            <Name>State Ch1</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1880424706" type="localTypes:PDO_Information">
+                                            <Attributes download="false" onlineaccess="none" />
+                                            <Value name="_x0031_880424706" visiblename="State Ch1" onlineaccess="none">
+                                              <Element name="Name" visiblename="Name" desc="Name">'State Ch1'</Element>
+                                              <Element name="DataType" visiblename="DataType" desc="DataType">'USINT'</Element>
+                                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                                            </Value>
+                                            <Name>State Ch1</Name>
+                                          </Parameter>
+                                        </ParameterSection>
+                                        <ParameterSection>
+                                          <Name>State Ch2</Name>
+                                          <Description />
+                                          <Parameter ParameterId="1879376131" type="localTypes:Entry">
+                                            <Attributes />
+                                            <Value name="_x0031_879376131" visiblename="State Ch2">
+                                              <Element name="Index" visiblename="Index" desc="Index">16#F100</Element>
+                                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">2</Element>
+                                              <Element name="Size" visiblename="Size" desc="Size">8</Element>
+                                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                                            </Value>
+                                            <Name>State Ch2</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1880424707" type="localTypes:PDO_Information">
+                                            <Attributes download="false" onlineaccess="none" />
+                                            <Value name="_x0031_880424707" visiblename="State Ch2" onlineaccess="none">
+                                              <Element name="Name" visiblename="Name" desc="Name">'State Ch2'</Element>
+                                              <Element name="DataType" visiblename="DataType" desc="DataType">'USINT'</Element>
+                                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                                            </Value>
+                                            <Name>State Ch2</Name>
+                                          </Parameter>
+                                        </ParameterSection>
+                                        <ParameterSection>
+                                          <Name>State Ch3</Name>
+                                          <Description />
+                                          <Parameter ParameterId="1879376132" type="localTypes:Entry">
+                                            <Attributes />
+                                            <Value name="_x0031_879376132" visiblename="State Ch3">
+                                              <Element name="Index" visiblename="Index" desc="Index">16#F100</Element>
+                                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">3</Element>
+                                              <Element name="Size" visiblename="Size" desc="Size">8</Element>
+                                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                                            </Value>
+                                            <Name>State Ch3</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1880424708" type="localTypes:PDO_Information">
+                                            <Attributes download="false" onlineaccess="none" />
+                                            <Value name="_x0031_880424708" visiblename="State Ch3" onlineaccess="none">
+                                              <Element name="Name" visiblename="Name" desc="Name">'State Ch3'</Element>
+                                              <Element name="DataType" visiblename="DataType" desc="DataType">'USINT'</Element>
+                                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                                            </Value>
+                                            <Name>State Ch3</Name>
+                                          </Parameter>
+                                        </ParameterSection>
+                                        <ParameterSection>
+                                          <Name>State Ch4</Name>
+                                          <Description />
+                                          <Parameter ParameterId="1879376133" type="localTypes:Entry">
+                                            <Attributes />
+                                            <Value name="_x0031_879376133" visiblename="State Ch4">
+                                              <Element name="Index" visiblename="Index" desc="Index">16#F100</Element>
+                                              <Element name="SubIndex" visiblename="SubIndex" desc="SubIndex">4</Element>
+                                              <Element name="Size" visiblename="Size" desc="Size">8</Element>
+                                              <Element name="Offset" visiblename="Offset" desc="Offset">0</Element>
+                                              <Element name="DependOnSlot" visiblename="DependOnSlot" desc="DependOnSlot">False</Element>
+                                              <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup" desc="DependOnSlotGroup">False</Element>
+                                            </Value>
+                                            <Name>State Ch4</Name>
+                                          </Parameter>
+                                          <Parameter ParameterId="1880424709" type="localTypes:PDO_Information">
+                                            <Attributes download="false" onlineaccess="none" />
+                                            <Value name="_x0031_880424709" visiblename="State Ch4" onlineaccess="none">
+                                              <Element name="Name" visiblename="Name" desc="Name">'State Ch4'</Element>
+                                              <Element name="DataType" visiblename="DataType" desc="DataType">'USINT'</Element>
+                                              <Element name="Default" visiblename="Default" desc="Default">''</Element>
+                                              <Element name="Comment" visiblename="Comment" desc="Comment">''</Element>
+                                            </Value>
+                                            <Name>State Ch4</Name>
+                                          </Parameter>
+                                        </ParameterSection>
+                                        <Parameter ParameterId="1879376128" type="localTypes:RxTxPdo">
+                                          <Attributes />
+                                          <Value name="_x0031_879376128" visiblename="RxTxPdo">
+                                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                                            <Element name="NumberofEntries" visiblename="NumberofEntries">4</Element>
+                                            <Element name="Index" visiblename="Index">16#1A04</Element>
+                                            <Element name="Fixed" visiblename="Fixed">True</Element>
+                                            <Element name="Mandatory" visiblename="Mandatory">True</Element>
+                                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                                            <Element name="Sm" visiblename="Sm">3</Element>
+                                            <Element name="Su" visiblename="Su">0</Element>
+                                            <Element name="Name" visiblename="Name">'DeviceState Inputs'</Element>
+                                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule" />
+                                            <Element name="SafetyPDOTypeMaster" visiblename="SafetyPDOTypeMaster" />
+                                            <Element name="SafetyPDOTypeSlave" visiblename="SafetyPDOTypeSlave" />
+                                          </Value>
+                                          <Name>RxTxPdo</Name>
+                                        </Parameter>
+                                      </ParameterSection>
+                                      <ParameterSection>
+                                        <Name>TxPDO3</Name>
+                                        <Description />
+                                        <Parameter ParameterId="1879376384" type="localTypes:RxTxPdo">
+                                          <Attributes />
+                                          <Value name="_x0031_879376384" visiblename="RxTxPdo">
+                                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                                            <Element name="NumberofEntries" visiblename="NumberofEntries">0</Element>
+                                            <Element name="Index" visiblename="Index">16#1A00</Element>
+                                            <Element name="Fixed" visiblename="Fixed">False</Element>
+                                            <Element name="Mandatory" visiblename="Mandatory">True</Element>
+                                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                                            <Element name="Sm" visiblename="Sm">3</Element>
+                                            <Element name="Su" visiblename="Su">0</Element>
+                                            <Element name="Name" visiblename="Name">'IO-Link Port1'</Element>
+                                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule">True</Element>
+                                            <Element name="SafetyPDOTypeMaster" visiblename="SafetyPDOTypeMaster" />
+                                            <Element name="SafetyPDOTypeSlave" visiblename="SafetyPDOTypeSlave" />
+                                          </Value>
+                                          <Name>RxTxPdo</Name>
+                                        </Parameter>
+                                      </ParameterSection>
+                                      <ParameterSection>
+                                        <Name>TxPDO4</Name>
+                                        <Description />
+                                        <Parameter ParameterId="1879376640" type="localTypes:RxTxPdo">
+                                          <Attributes />
+                                          <Value name="_x0031_879376640" visiblename="RxTxPdo">
+                                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                                            <Element name="NumberofEntries" visiblename="NumberofEntries">0</Element>
+                                            <Element name="Index" visiblename="Index">16#1A01</Element>
+                                            <Element name="Fixed" visiblename="Fixed">False</Element>
+                                            <Element name="Mandatory" visiblename="Mandatory">True</Element>
+                                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                                            <Element name="Sm" visiblename="Sm">3</Element>
+                                            <Element name="Su" visiblename="Su">0</Element>
+                                            <Element name="Name" visiblename="Name">'IO-Link Port2'</Element>
+                                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule">True</Element>
+                                            <Element name="SafetyPDOTypeMaster" visiblename="SafetyPDOTypeMaster" />
+                                            <Element name="SafetyPDOTypeSlave" visiblename="SafetyPDOTypeSlave" />
+                                          </Value>
+                                          <Name>RxTxPdo</Name>
+                                        </Parameter>
+                                      </ParameterSection>
+                                      <ParameterSection>
+                                        <Name>TxPDO5</Name>
+                                        <Description />
+                                        <Parameter ParameterId="1879376896" type="localTypes:RxTxPdo">
+                                          <Attributes />
+                                          <Value name="_x0031_879376896" visiblename="RxTxPdo">
+                                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                                            <Element name="NumberofEntries" visiblename="NumberofEntries">0</Element>
+                                            <Element name="Index" visiblename="Index">16#1A02</Element>
+                                            <Element name="Fixed" visiblename="Fixed">False</Element>
+                                            <Element name="Mandatory" visiblename="Mandatory">True</Element>
+                                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                                            <Element name="Sm" visiblename="Sm">3</Element>
+                                            <Element name="Su" visiblename="Su">0</Element>
+                                            <Element name="Name" visiblename="Name">'IO-Link Port3'</Element>
+                                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule">True</Element>
+                                            <Element name="SafetyPDOTypeMaster" visiblename="SafetyPDOTypeMaster" />
+                                            <Element name="SafetyPDOTypeSlave" visiblename="SafetyPDOTypeSlave" />
+                                          </Value>
+                                          <Name>RxTxPdo</Name>
+                                        </Parameter>
+                                      </ParameterSection>
+                                      <ParameterSection>
+                                        <Name>TxPDO6</Name>
+                                        <Description />
+                                        <Parameter ParameterId="1879377152" type="localTypes:RxTxPdo">
+                                          <Attributes />
+                                          <Value name="_x0031_879377152" visiblename="RxTxPdo">
+                                            <Element name="NumberofExcludes" visiblename="NumberofExcludes">0</Element>
+                                            <Element name="NumberofEntries" visiblename="NumberofEntries">0</Element>
+                                            <Element name="Index" visiblename="Index">16#1A03</Element>
+                                            <Element name="Fixed" visiblename="Fixed">False</Element>
+                                            <Element name="Mandatory" visiblename="Mandatory">True</Element>
+                                            <Element name="Virtual" visiblename="Virtual">False</Element>
+                                            <Element name="Sm" visiblename="Sm">3</Element>
+                                            <Element name="Su" visiblename="Su">0</Element>
+                                            <Element name="Name" visiblename="Name">'IO-Link Port4'</Element>
+                                            <Element name="DependOnSlot" visiblename="DependOnSlot">False</Element>
+                                            <Element name="DependOnSlotGroup" visiblename="DependOnSlotGroup">False</Element>
+                                            <Element name="OverwrittenByModule" visiblename="OverwrittenByModule">True</Element>
+                                            <Element name="SafetyPDOTypeMaster" visiblename="SafetyPDOTypeMaster" />
+                                            <Element name="SafetyPDOTypeSlave" visiblename="SafetyPDOTypeSlave" />
+                                          </Value>
+                                          <Name>RxTxPdo</Name>
+                                        </Parameter>
+                                      </ParameterSection>
+                                      <Parameter ParameterId="1342636032" type="std:DWORD" IndexInDevDesc="34">
+                                        <Attributes />
+                                        <Value name="_x0031_342636032" visiblename="Number of TxPDOs of the Slave" desc="Number of TxPDOs of the Slave">6</Value>
+                                        <Name>Number of TxPDOs of the Slave</Name>
+                                        <Description>Number of TxPDOs of the Slave</Description>
+                                      </Parameter>
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>FMMUs</Name>
+                                      <Description />
+                                      <Parameter ParameterId="1342177312" type="std:DWORD" IndexInDevDesc="35">
+                                        <Attributes />
+                                        <Value name="_x0031_342177312" visiblename="Number of FMMUs of the Slave" desc="Number of FMMUs of the Slave">3</Value>
+                                        <Name>Number of FMMUs of the Slave</Name>
+                                        <Description>Number of FMMUs of the Slave</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1342177313" type="localTypes:FMMU" IndexInDevDesc="36">
+                                        <Attributes />
+                                        <Value name="_x0031_342177313" visiblename="FMMU">
+                                          <Element name="globstartadr" visiblename="Global Start Address" desc="Global Start Address">33554432</Element>
+                                          <Element name="length" visiblename="Length" desc="Length">2</Element>
+                                          <Element name="startbit" visiblename="StartBit" desc="StartBit">0</Element>
+                                          <Element name="endbit" visiblename="EndBit" desc="EndBit">7</Element>
+                                          <Element name="physstartadr" visiblename="Physical Start Address" desc="Physical Start Address">4608</Element>
+                                          <Element name="logstartbit" visiblename="Logical Start Bit" desc="Logical Start Bit">0</Element>
+                                          <Element name="access" visiblename="Access" desc="Access">2</Element>
+                                          <Element name="flags" visiblename="Flags" desc="Flags">1</Element>
+                                        </Value>
+                                        <Name>FMMU</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1342177314" type="localTypes:FMMU" IndexInDevDesc="37">
+                                        <Attributes />
+                                        <Value name="_x0031_342177314" visiblename="FMMU">
+                                          <Element name="globstartadr" visiblename="Global Start Address" desc="Global Start Address">16777216</Element>
+                                          <Element name="length" visiblename="Length" desc="Length">6</Element>
+                                          <Element name="startbit" visiblename="StartBit" desc="StartBit">0</Element>
+                                          <Element name="endbit" visiblename="EndBit" desc="EndBit">7</Element>
+                                          <Element name="physstartadr" visiblename="Physical Start Address" desc="Physical Start Address">6400</Element>
+                                          <Element name="logstartbit" visiblename="Logical Start Bit" desc="Logical Start Bit">0</Element>
+                                          <Element name="access" visiblename="Access" desc="Access">1</Element>
+                                          <Element name="flags" visiblename="Flags" desc="Flags">1</Element>
+                                        </Value>
+                                        <Name>FMMU</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1342177315" type="localTypes:FMMU" IndexInDevDesc="38">
+                                        <Attributes />
+                                        <Value name="_x0031_342177315" visiblename="FMMU">
+                                          <Element name="globstartadr" visiblename="Global Start Address" desc="Global Start Address">524288</Element>
+                                          <Element name="length" visiblename="Length" desc="Length">1</Element>
+                                          <Element name="startbit" visiblename="StartBit" desc="StartBit">0</Element>
+                                          <Element name="endbit" visiblename="EndBit" desc="EndBit">0</Element>
+                                          <Element name="physstartadr" visiblename="Physical Start Address" desc="Physical Start Address">2061</Element>
+                                          <Element name="logstartbit" visiblename="Logical Start Bit" desc="Logical Start Bit">0</Element>
+                                          <Element name="access" visiblename="Access" desc="Access">1</Element>
+                                          <Element name="flags" visiblename="Flags" desc="Flags">1</Element>
+                                        </Value>
+                                        <Name>FMMU</Name>
+                                      </Parameter>
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>SyncManager</Name>
+                                      <Description />
+                                      <Parameter ParameterId="1342177280" type="std:DWORD" IndexInDevDesc="39">
+                                        <Attributes />
+                                        <Value name="_x0031_342177280" visiblename="Number of SyncManagers of the Slave" desc="Number of SyncManagers of the Slave">4</Value>
+                                        <Name>Number of SyncManagers of the Slave</Name>
+                                        <Description>Number of SyncManagers of the Slave</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="1342177281" type="localTypes:Sync" IndexInDevDesc="40">
+                                        <Attributes />
+                                        <Value name="_x0031_342177281" visiblename="Sync">
+                                          <Element name="physicalAddress" visiblename="Physical Address" desc="Physical Address">4096</Element>
+                                          <Element name="length" visiblename="Length" desc="Length">256</Element>
+                                          <Element name="flagtypedir" visiblename="FlagTypeDir" desc="FlagTypeDir">38</Element>
+                                          <Element name="flagevent" visiblename="FlagEvent" desc="FlagEvent">0</Element>
+                                          <Element name="flagctrl" visiblename="FlagControl" desc="FlagControl">1</Element>
+                                          <Element name="synctype" visiblename="SyncType" desc="SyncType">3</Element>
+                                          <Element name="flagvirtual" visiblename="Virtual" desc="Virtual" />
+                                          <Element name="oponly" visiblename="OpOnly" desc="OpOnly" />
+                                        </Value>
+                                        <Name>Sync</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1342177282" type="localTypes:Sync" IndexInDevDesc="41">
+                                        <Attributes />
+                                        <Value name="_x0031_342177282" visiblename="Sync">
+                                          <Element name="physicalAddress" visiblename="Physical Address" desc="Physical Address">4352</Element>
+                                          <Element name="length" visiblename="Length" desc="Length">256</Element>
+                                          <Element name="flagtypedir" visiblename="FlagTypeDir" desc="FlagTypeDir">34</Element>
+                                          <Element name="flagevent" visiblename="FlagEvent" desc="FlagEvent">0</Element>
+                                          <Element name="flagctrl" visiblename="FlagControl" desc="FlagControl">1</Element>
+                                          <Element name="synctype" visiblename="SyncType" desc="SyncType">2</Element>
+                                          <Element name="flagvirtual" visiblename="Virtual" desc="Virtual" />
+                                          <Element name="oponly" visiblename="OpOnly" desc="OpOnly" />
+                                        </Value>
+                                        <Name>Sync</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1342177283" type="localTypes:Sync" IndexInDevDesc="42">
+                                        <Attributes />
+                                        <Value name="_x0031_342177283" visiblename="Sync">
+                                          <Element name="physicalAddress" visiblename="Physical Address" desc="Physical Address">4608</Element>
+                                          <Element name="length" visiblename="Length" desc="Length">2</Element>
+                                          <Element name="flagtypedir" visiblename="FlagTypeDir" desc="FlagTypeDir">36</Element>
+                                          <Element name="flagevent" visiblename="FlagEvent" desc="FlagEvent">0</Element>
+                                          <Element name="flagctrl" visiblename="FlagControl" desc="FlagControl">1</Element>
+                                          <Element name="synctype" visiblename="SyncType" desc="SyncType">1</Element>
+                                          <Element name="flagvirtual" visiblename="Virtual" desc="Virtual">0</Element>
+                                          <Element name="oponly" visiblename="OpOnly" desc="OpOnly">0</Element>
+                                        </Value>
+                                        <Name>Sync</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1342177284" type="localTypes:Sync" IndexInDevDesc="43">
+                                        <Attributes />
+                                        <Value name="_x0031_342177284" visiblename="Sync">
+                                          <Element name="physicalAddress" visiblename="Physical Address" desc="Physical Address">6400</Element>
+                                          <Element name="length" visiblename="Length" desc="Length">6</Element>
+                                          <Element name="flagtypedir" visiblename="FlagTypeDir" desc="FlagTypeDir">32</Element>
+                                          <Element name="flagevent" visiblename="FlagEvent" desc="FlagEvent">0</Element>
+                                          <Element name="flagctrl" visiblename="FlagControl" desc="FlagControl">1</Element>
+                                          <Element name="synctype" visiblename="SyncType" desc="SyncType">0</Element>
+                                          <Element name="flagvirtual" visiblename="Virtual" desc="Virtual">0</Element>
+                                          <Element name="oponly" visiblename="OpOnly" desc="OpOnly">0</Element>
+                                        </Value>
+                                        <Name>Sync</Name>
+                                      </Parameter>
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>SDOs</Name>
+                                      <Description />
+                                      <Parameter ParameterId="1627389952" type="std:UINT">
+                                        <Attributes onlineaccess="read" />
+                                        <Value name="_x0031_627389952" visiblename="Number of SDO" onlineaccess="read">4</Value>
+                                        <Name>Number of SDO</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1627394048" type="localTypes:Struct_SDOParameters">
+                                        <Attributes offlineaccess="read" onlineaccess="read" />
+                                        <Value name="_x0031_627394048" visiblename="Object 8000" offlineaccess="read" onlineaccess="read">
+                                          <Element name="Index" visiblename="Index" desc="Index">16#8000</Element>
+                                          <Element name="Subindex" visiblename="Subindex" desc="Subindex">16#01</Element>
+                                          <Element name="Value" visiblename="Value" desc="Value" />
+                                          <Element name="Size" visiblename="Size" desc="Size">160</Element>
+                                          <Element name="AbortIfError" visiblename="AbortIfError" desc="AbortIfError">FALSE</Element>
+                                          <Element name="JumpToLine" visiblename="JumpToLine" desc="JumpToLine">FALSE</Element>
+                                          <Element name="Line" visiblename="Line" desc="Line">0</Element>
+                                          <Element name="Transition" visiblename="Transition">0</Element>
+                                          <Element name="CompleteAccess" visiblename="CompleteAccess" desc="CompleteAccess">True</Element>
+                                        </Value>
+                                        <Name>Object 8000</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1627394049" type="localTypes:Struct_SDOParameters">
+                                        <Attributes offlineaccess="read" onlineaccess="read" />
+                                        <Value name="_x0031_627394049" visiblename="Object 8010" offlineaccess="read" onlineaccess="read">
+                                          <Element name="Index" visiblename="Index" desc="Index">16#8010</Element>
+                                          <Element name="Subindex" visiblename="Subindex" desc="Subindex">16#01</Element>
+                                          <Element name="Value" visiblename="Value" desc="Value" />
+                                          <Element name="Size" visiblename="Size" desc="Size">160</Element>
+                                          <Element name="AbortIfError" visiblename="AbortIfError" desc="AbortIfError">FALSE</Element>
+                                          <Element name="JumpToLine" visiblename="JumpToLine" desc="JumpToLine">FALSE</Element>
+                                          <Element name="Line" visiblename="Line" desc="Line">0</Element>
+                                          <Element name="Transition" visiblename="Transition">0</Element>
+                                          <Element name="CompleteAccess" visiblename="CompleteAccess" desc="CompleteAccess">True</Element>
+                                        </Value>
+                                        <Name>Object 8010</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1627394050" type="localTypes:Struct_SDOParameters">
+                                        <Attributes offlineaccess="read" onlineaccess="read" />
+                                        <Value name="_x0031_627394050" visiblename="Object 8020" offlineaccess="read" onlineaccess="read">
+                                          <Element name="Index" visiblename="Index" desc="Index">16#8020</Element>
+                                          <Element name="Subindex" visiblename="Subindex" desc="Subindex">16#01</Element>
+                                          <Element name="Value" visiblename="Value" desc="Value" />
+                                          <Element name="Size" visiblename="Size" desc="Size">160</Element>
+                                          <Element name="AbortIfError" visiblename="AbortIfError" desc="AbortIfError">FALSE</Element>
+                                          <Element name="JumpToLine" visiblename="JumpToLine" desc="JumpToLine">FALSE</Element>
+                                          <Element name="Line" visiblename="Line" desc="Line">0</Element>
+                                          <Element name="Transition" visiblename="Transition">0</Element>
+                                          <Element name="CompleteAccess" visiblename="CompleteAccess" desc="CompleteAccess">True</Element>
+                                        </Value>
+                                        <Name>Object 8020</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1627394051" type="localTypes:Struct_SDOParameters">
+                                        <Attributes offlineaccess="read" onlineaccess="read" />
+                                        <Value name="_x0031_627394051" visiblename="Object 8030" offlineaccess="read" onlineaccess="read">
+                                          <Element name="Index" visiblename="Index" desc="Index">16#8030</Element>
+                                          <Element name="Subindex" visiblename="Subindex" desc="Subindex">16#01</Element>
+                                          <Element name="Value" visiblename="Value" desc="Value" />
+                                          <Element name="Size" visiblename="Size" desc="Size">160</Element>
+                                          <Element name="AbortIfError" visiblename="AbortIfError" desc="AbortIfError">FALSE</Element>
+                                          <Element name="JumpToLine" visiblename="JumpToLine" desc="JumpToLine">FALSE</Element>
+                                          <Element name="Line" visiblename="Line" desc="Line">0</Element>
+                                          <Element name="Transition" visiblename="Transition">0</Element>
+                                          <Element name="CompleteAccess" visiblename="CompleteAccess" desc="CompleteAccess">True</Element>
+                                        </Value>
+                                        <Name>Object 8030</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1628442624" type="std:ARRAY[0..19] OF BYTE">
+                                        <Attributes offlineaccess="read" onlineaccess="read" />
+                                        <Value name="_x0031_628442624" visiblename="Object 8000" offlineaccess="read" onlineaccess="read">[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,2,0]</Value>
+                                        <Name>Object 8000</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1628442625" type="std:ARRAY[0..19] OF BYTE">
+                                        <Attributes offlineaccess="read" onlineaccess="read" />
+                                        <Value name="_x0031_628442625" visiblename="Object 8010" offlineaccess="read" onlineaccess="read">[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]</Value>
+                                        <Name>Object 8010</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1628442626" type="std:ARRAY[0..19] OF BYTE">
+                                        <Attributes offlineaccess="read" onlineaccess="read" />
+                                        <Value name="_x0031_628442626" visiblename="Object 8020" offlineaccess="read" onlineaccess="read">[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]</Value>
+                                        <Name>Object 8020</Name>
+                                      </Parameter>
+                                      <Parameter ParameterId="1628442627" type="std:ARRAY[0..19] OF BYTE">
+                                        <Attributes offlineaccess="read" onlineaccess="read" />
+                                        <Value name="_x0031_628442627" visiblename="Object 8030" offlineaccess="read" onlineaccess="read">[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]</Value>
+                                        <Name>Object 8030</Name>
+                                      </Parameter>
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>16#1A05 DeviceState Inputs Device</Name>
+                                      <Description />
+                                      <Parameter ParameterId="33554434" type="std:USINT">
+                                        <Attributes channel="input" offlineaccess="none" onlineaccess="none" />
+                                        <Value name="_x0033_3554434" offlineaccess="none" onlineaccess="none">
+                                          <Element name="_x0033_3554434_0" visiblename="Bit0" offlineaccess="none" onlineaccess="none">FALSE</Element>
+                                          <Element name="_x0033_3554434_1" visiblename="Bit1" offlineaccess="none" onlineaccess="none">FALSE</Element>
+                                          <Element name="_x0033_3554434_2" visiblename="Bit2" offlineaccess="none" onlineaccess="none">FALSE</Element>
+                                          <Element name="_x0033_3554434_3" visiblename="Bit3" offlineaccess="none" onlineaccess="none">FALSE</Element>
+                                          <Element name="_x0033_3554434_4" visiblename="Bit4" offlineaccess="none" onlineaccess="none">FALSE</Element>
+                                          <Element name="_x0033_3554434_5" visiblename="Bit5" offlineaccess="none" onlineaccess="none">FALSE</Element>
+                                          <Element name="_x0033_3554434_6" visiblename="Bit6" offlineaccess="none" onlineaccess="none">FALSE</Element>
+                                          <Element name="_x0033_3554434_7" visiblename="Bit7" offlineaccess="none" onlineaccess="none">FALSE</Element>
+                                        </Value>
+                                        <Name />
+                                      </Parameter>
+                                      <Parameter ParameterId="33554435" type="std:BIT">
+                                        <Attributes channel="input" offlineaccess="none" onlineaccess="none" />
+                                        <Value name="_x0033_3554435" offlineaccess="none" onlineaccess="none" />
+                                        <Name />
+                                      </Parameter>
+                                      <Parameter ParameterId="33554436" type="std:BIT">
+                                        <Attributes channel="input" offlineaccess="none" onlineaccess="none" />
+                                        <Value name="_x0033_3554436" offlineaccess="none" onlineaccess="none" />
+                                        <Name />
+                                      </Parameter>
+                                      <Parameter ParameterId="33554437" type="std:BIT">
+                                        <Attributes channel="input" offlineaccess="none" onlineaccess="none" />
+                                        <Value name="_x0033_3554437" offlineaccess="none" onlineaccess="none" />
+                                        <Name />
+                                      </Parameter>
+                                      <Parameter ParameterId="33554438" type="std:BIT">
+                                        <Attributes channel="input" offlineaccess="none" onlineaccess="none" />
+                                        <Value name="_x0033_3554438" offlineaccess="none" onlineaccess="none" />
+                                        <Name />
+                                      </Parameter>
+                                      <Parameter ParameterId="33554439" type="std:BIT">
+                                        <Attributes channel="input" />
+                                        <Value name="_x0033_3554439" visiblename="Device Diag" desc="Device Diag" />
+                                        <Name>Device Diag</Name>
+                                        <Description>Device Diag</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="33554440" type="std:BIT">
+                                        <Attributes channel="input" offlineaccess="none" onlineaccess="none" />
+                                        <Value name="_x0033_3554440" offlineaccess="none" onlineaccess="none" />
+                                        <Name />
+                                      </Parameter>
+                                      <Parameter ParameterId="33554441" type="std:BIT">
+                                        <Attributes channel="input" offlineaccess="none" onlineaccess="none" />
+                                        <Value name="_x0033_3554441" offlineaccess="none" onlineaccess="none" />
+                                        <Name />
+                                      </Parameter>
+                                      <Parameter ParameterId="33554442" type="std:BIT">
+                                        <Attributes channel="input" />
+                                        <Value name="_x0033_3554442" visiblename="Device State" desc="Device State" />
+                                        <Name>Device State</Name>
+                                        <Description>Device State</Description>
+                                      </Parameter>
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>16#1A04 DeviceState Inputs</Name>
+                                      <Description />
+                                      <Parameter ParameterId="33554443" type="std:USINT">
+                                        <Attributes channel="input" />
+                                        <Value name="_x0033_3554443" visiblename="State Ch1" desc="State Ch1">
+                                          <Element name="_x0033_3554443_0" visiblename="Bit0" desc="State Ch1">FALSE</Element>
+                                          <Element name="_x0033_3554443_1" visiblename="Bit1" desc="State Ch1">FALSE</Element>
+                                          <Element name="_x0033_3554443_2" visiblename="Bit2" desc="State Ch1">FALSE</Element>
+                                          <Element name="_x0033_3554443_3" visiblename="Bit3" desc="State Ch1">FALSE</Element>
+                                          <Element name="_x0033_3554443_4" visiblename="Bit4" desc="State Ch1">FALSE</Element>
+                                          <Element name="_x0033_3554443_5" visiblename="Bit5" desc="State Ch1">FALSE</Element>
+                                          <Element name="_x0033_3554443_6" visiblename="Bit6" desc="State Ch1">FALSE</Element>
+                                          <Element name="_x0033_3554443_7" visiblename="Bit7" desc="State Ch1">FALSE</Element>
+                                        </Value>
+                                        <Name>State Ch1</Name>
+                                        <Description>State Ch1</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="33554444" type="std:USINT">
+                                        <Attributes channel="input" />
+                                        <Value name="_x0033_3554444" visiblename="State Ch2" desc="State Ch2">
+                                          <Element name="_x0033_3554444_0" visiblename="Bit0" desc="State Ch2">FALSE</Element>
+                                          <Element name="_x0033_3554444_1" visiblename="Bit1" desc="State Ch2">FALSE</Element>
+                                          <Element name="_x0033_3554444_2" visiblename="Bit2" desc="State Ch2">FALSE</Element>
+                                          <Element name="_x0033_3554444_3" visiblename="Bit3" desc="State Ch2">FALSE</Element>
+                                          <Element name="_x0033_3554444_4" visiblename="Bit4" desc="State Ch2">FALSE</Element>
+                                          <Element name="_x0033_3554444_5" visiblename="Bit5" desc="State Ch2">FALSE</Element>
+                                          <Element name="_x0033_3554444_6" visiblename="Bit6" desc="State Ch2">FALSE</Element>
+                                          <Element name="_x0033_3554444_7" visiblename="Bit7" desc="State Ch2">FALSE</Element>
+                                        </Value>
+                                        <Name>State Ch2</Name>
+                                        <Description>State Ch2</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="33554445" type="std:USINT">
+                                        <Attributes channel="input" />
+                                        <Value name="_x0033_3554445" visiblename="State Ch3" desc="State Ch3">
+                                          <Element name="_x0033_3554445_0" visiblename="Bit0" desc="State Ch3">FALSE</Element>
+                                          <Element name="_x0033_3554445_1" visiblename="Bit1" desc="State Ch3">FALSE</Element>
+                                          <Element name="_x0033_3554445_2" visiblename="Bit2" desc="State Ch3">FALSE</Element>
+                                          <Element name="_x0033_3554445_3" visiblename="Bit3" desc="State Ch3">FALSE</Element>
+                                          <Element name="_x0033_3554445_4" visiblename="Bit4" desc="State Ch3">FALSE</Element>
+                                          <Element name="_x0033_3554445_5" visiblename="Bit5" desc="State Ch3">FALSE</Element>
+                                          <Element name="_x0033_3554445_6" visiblename="Bit6" desc="State Ch3">FALSE</Element>
+                                          <Element name="_x0033_3554445_7" visiblename="Bit7" desc="State Ch3">FALSE</Element>
+                                        </Value>
+                                        <Name>State Ch3</Name>
+                                        <Description>State Ch3</Description>
+                                      </Parameter>
+                                      <Parameter ParameterId="33554446" type="std:USINT">
+                                        <Attributes channel="input" />
+                                        <Value name="_x0033_3554446" visiblename="State Ch4" desc="State Ch4">
+                                          <Element name="_x0033_3554446_0" visiblename="Bit0" desc="State Ch4">FALSE</Element>
+                                          <Element name="_x0033_3554446_1" visiblename="Bit1" desc="State Ch4">FALSE</Element>
+                                          <Element name="_x0033_3554446_2" visiblename="Bit2" desc="State Ch4">FALSE</Element>
+                                          <Element name="_x0033_3554446_3" visiblename="Bit3" desc="State Ch4">FALSE</Element>
+                                          <Element name="_x0033_3554446_4" visiblename="Bit4" desc="State Ch4">FALSE</Element>
+                                          <Element name="_x0033_3554446_5" visiblename="Bit5" desc="State Ch4">FALSE</Element>
+                                          <Element name="_x0033_3554446_6" visiblename="Bit6" desc="State Ch4">FALSE</Element>
+                                          <Element name="_x0033_3554446_7" visiblename="Bit7" desc="State Ch4">FALSE</Element>
+                                        </Value>
+                                        <Name>State Ch4</Name>
+                                        <Description>State Ch4</Description>
+                                      </Parameter>
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>16#1A00 IO-Link Port1</Name>
+                                      <Description />
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>16#1A01 IO-Link Port2</Name>
+                                      <Description />
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>16#1A02 IO-Link Port3</Name>
+                                      <Description />
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>16#1A03 IO-Link Port4</Name>
+                                      <Description />
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>16#1600 IO-Link Port1</Name>
+                                      <Description />
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>16#1601 IO-Link Port2</Name>
+                                      <Description />
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>16#1602 IO-Link Port3</Name>
+                                      <Description />
+                                    </ParameterSection>
+                                    <ParameterSection>
+                                      <Name>16#1603 IO-Link Port4</Name>
+                                      <Description />
+                                    </ParameterSection>
+                                    <Parameter ParameterId="1000" type="std:STRING" IndexInDevDesc="0">
+                                      <Attributes download="false" offlineaccess="none" onlineaccess="none" />
+                                      <Value name="_x0031_000" visiblename="Plugin GUID" offlineaccess="none" onlineaccess="none" desc="Plugin GUID">{C8D66277-913C-4fb3-BF6F-C5B6516ED982}</Value>
+                                      <Name>Plugin GUID</Name>
+                                      <Description>Plugin GUID</Description>
+                                    </Parameter>
+                                    <Parameter ParameterId="1001" type="std:BOOL" IndexInDevDesc="1">
+                                      <Attributes offlineaccess="none" onlineaccess="none" />
+                                      <Value name="_x0031_001" visiblename="Modular Device" offlineaccess="none" onlineaccess="none" desc="Modular Device">TRUE</Value>
+                                      <Name>Modular Device</Name>
+                                      <Description>Modular Device</Description>
+                                    </Parameter>
+                                    <Parameter ParameterId="16777216" type="std:DWORD">
+                                      <Attributes />
+                                      <Value name="_x0031_6777216" visiblename="Number of Outputs">0</Value>
+                                      <Name>Number of Outputs</Name>
+                                    </Parameter>
+                                    <Parameter ParameterId="33554432" type="std:DWORD">
+                                      <Attributes />
+                                      <Value name="_x0033_3554432" visiblename="Number of Inputs">13</Value>
+                                      <Name>Number of Inputs</Name>
+                                    </Parameter>
+                                    <Parameter ParameterId="268435456" type="std:DWORD">
+                                      <Attributes />
+                                      <Value name="_x0032_68435456" visiblename="Number of Infos about Outputs">0</Value>
+                                      <Name>Number of Infos about Outputs</Name>
+                                    </Parameter>
+                                    <Parameter ParameterId="536870912" type="std:DWORD">
+                                      <Attributes />
+                                      <Value name="_x0035_36870912" visiblename="Number of Infos about Inputs">13</Value>
+                                      <Name>Number of Infos about Inputs</Name>
+                                    </Parameter>
+                                  </HostParameterSet>
+                                </Connector>
+                                <Connector moduleType="160" interface="Common.IoLink" connectorId="2" hostpath="1">
+                                  <HostParameterSet />
+                                </Connector>
+                                <DeviceParameterSet />
+                              </DeviceType>
+                            </Device>
+                          </data>
+                          <data name="configurations" handleUnknown="discard">
+                            <configurations>
+                              <configuration name="Digital_Output">
+                                <addData>
+                                  <data name="Device" handleUnknown="discard">
+                                    <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+                                      <DeviceType>
+                                        <DeviceIdentification>
+                                          <Type>176</Type>
+                                          <Id>0000 0011</Id>
+                                          <Version>4.1.0.0</Version>
+                                        </DeviceIdentification>
+                                        <Connector moduleType="176" role="child" interface="Common.IoLink" connectorId="0">
+                                          <HostParameterSet>
+                                            <Parameter ParameterId="1004" type="std:BOOL" IndexInDevDesc="2">
+                                              <Attributes channel="diagAck" offlineaccess="read" onlineaccess="read" />
+                                              <Value name="_x0031_004" visiblename="Acknowledge" offlineaccess="read" onlineaccess="read">0</Value>
+                                              <Name>Acknowledge</Name>
+                                            </Parameter>
+                                            <Parameter ParameterId="32827" type="std:BIT" IndexInDevDesc="0">
+                                              <Attributes channel="output" />
+                                              <Value name="_x0033_2827" visiblename="Output" />
+                                              <Name>Output</Name>
+                                              <Mapping>Application.PLC_PRG.Output1</Mapping>
+                                            </Parameter>
+                                            <Parameter ParameterId="32828" type="localTypes:ProcessDataDescription" IndexInDevDesc="1">
+                                              <Attributes offlineaccess="none" onlineaccess="none" />
+                                              <Value name="_x0033_2828" visiblename="Process data out" offlineaccess="none" onlineaccess="none">
+                                                <Element name="bitOffset" visiblename="bitOffset" offlineaccess="none" onlineaccess="none">0</Element>
+                                                <Element name="bitLength" visiblename="bitLength" offlineaccess="none" onlineaccess="none">1</Element>
+                                                <Element name="userType" visiblename="userType" offlineaccess="none" onlineaccess="none" />
+                                                <Element name="channelType" visiblename="ChannelType" offlineaccess="none" onlineaccess="none">2</Element>
+                                              </Value>
+                                              <Name>Process data out</Name>
+                                            </Parameter>
+                                          </HostParameterSet>
+                                        </Connector>
+                                        <DeviceParameterSet />
+                                      </DeviceType>
+                                    </Device>
+                                  </data>
+                                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                                    <ObjectId>b4dc2760-cc70-41df-8daf-621f201b8383</ObjectId>
+                                  </data>
+                                </addData>
+                              </configuration>
+                              <configuration name="&lt;Empty&gt;">
+                                <addData>
+                                  <data name="Device" handleUnknown="discard" />
+                                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                                    <ObjectId>5fe772a3-f7df-46af-807e-a9bb2cca6b71</ObjectId>
+                                  </data>
+                                </addData>
+                              </configuration>
+                              <configuration name="&lt;Empty&gt;">
+                                <addData>
+                                  <data name="Device" handleUnknown="discard" />
+                                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                                    <ObjectId>950a700c-746b-4382-90b4-b556e947d315</ObjectId>
+                                  </data>
+                                </addData>
+                              </configuration>
+                              <configuration name="&lt;Empty&gt;">
+                                <addData>
+                                  <data name="Device" handleUnknown="discard" />
+                                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                                    <ObjectId>faef0466-3fd5-4d13-8d70-7e7fc84776cf</ObjectId>
+                                  </data>
+                                </addData>
+                              </configuration>
+                            </configurations>
+                          </data>
+                          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                            <ObjectId>383f33c9-e74a-4e28-a460-2bf217376ba2</ObjectId>
+                          </data>
+                        </addData>
+                      </configuration>
+                    </configurations>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                    <ObjectId>3d24abde-6d49-4d6e-816d-f972054da752</ObjectId>
+                  </data>
+                </addData>
+              </configuration>
+              <configuration name="GPIOs_A_B">
+                <addData>
+                  <data name="Device" handleUnknown="discard">
+                    <Device xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="">
+                      <DeviceType>
+                        <DeviceIdentification>
+                          <Type>504</Type>
+                          <Id>0000 0000</Id>
+                          <Version>4.12.0.0</Version>
+                        </DeviceIdentification>
+                        <Connector moduleType="504" role="child" interface="Raspberry.GPIOs" connectorId="1">
+                          <HostParameterSet>
+                            <Parameter ParameterId="4" type="local:GPIOType" IndexInDevDesc="0">
+                              <Attributes onlineaccess="read" />
+                              <Value name="_x0034_" visiblename="GPIO4" onlineaccess="read" desc="configuration of GPIO4">255</Value>
+                              <Name>GPIO4</Name>
+                              <Description>configuration of GPIO4</Description>
+                            </Parameter>
+                            <Parameter ParameterId="17" type="local:GPIOType" IndexInDevDesc="1">
+                              <Attributes onlineaccess="read" />
+                              <Value name="_x0031_7" visiblename="GPIO17" onlineaccess="read" desc="configuration of GPIO17">255</Value>
+                              <Name>GPIO17</Name>
+                              <Description>configuration of GPIO17</Description>
+                            </Parameter>
+                            <Parameter ParameterId="18" type="local:GPIOType" IndexInDevDesc="2">
+                              <Attributes onlineaccess="read" />
+                              <Value name="_x0031_8" visiblename="GPIO18" onlineaccess="read" desc="configuration of GPIO18">255</Value>
+                              <Name>GPIO18</Name>
+                              <Description>configuration of GPIO18</Description>
+                            </Parameter>
+                            <Parameter ParameterId="22" type="local:GPIOType" IndexInDevDesc="3">
+                              <Attributes onlineaccess="read" />
+                              <Value name="_x0032_2" visiblename="GPIO22" onlineaccess="read" desc="configuration of GPIO22">255</Value>
+                              <Name>GPIO22</Name>
+                              <Description>configuration of GPIO22</Description>
+                            </Parameter>
+                            <Parameter ParameterId="23" type="local:GPIOType" IndexInDevDesc="4">
+                              <Attributes onlineaccess="read" />
+                              <Value name="_x0032_3" visiblename="GPIO23" onlineaccess="read" desc="configuration of GPIO23">255</Value>
+                              <Name>GPIO23</Name>
+                              <Description>configuration of GPIO23</Description>
+                            </Parameter>
+                            <Parameter ParameterId="24" type="local:GPIOType" IndexInDevDesc="5">
+                              <Attributes onlineaccess="read" />
+                              <Value name="_x0032_4" visiblename="GPIO24" onlineaccess="read" desc="configuration of GPIO24">255</Value>
+                              <Name>GPIO24</Name>
+                              <Description>configuration of GPIO24</Description>
+                            </Parameter>
+                            <Parameter ParameterId="25" type="local:GPIOType" IndexInDevDesc="6">
+                              <Attributes onlineaccess="read" />
+                              <Value name="_x0032_5" visiblename="GPIO25" onlineaccess="read" desc="configuration of GPIO25">255</Value>
+                              <Name>GPIO25</Name>
+                              <Description>configuration of GPIO25</Description>
+                            </Parameter>
+                            <Parameter ParameterId="27" type="local:GPIOType" IndexInDevDesc="7">
+                              <Attributes onlineaccess="read" />
+                              <Value name="_x0032_7" visiblename="GPIO27" onlineaccess="read" desc="configuration of GPIO27">255</Value>
+                              <Name>GPIO27</Name>
+                              <Description>configuration of GPIO27</Description>
+                            </Parameter>
+                            <Parameter ParameterId="28" type="local:GPIOType" IndexInDevDesc="8">
+                              <Attributes onlineaccess="read" />
+                              <Value name="_x0032_8" visiblename="GPIO28" onlineaccess="read" desc="configuration of GPIO28">255</Value>
+                              <Name>GPIO28</Name>
+                              <Description>configuration of GPIO28</Description>
+                            </Parameter>
+                            <Parameter ParameterId="29" type="local:GPIOType" IndexInDevDesc="9">
+                              <Attributes onlineaccess="read" />
+                              <Value name="_x0032_9" visiblename="GPIO29" onlineaccess="read" desc="configuration of GPIO29">255</Value>
+                              <Name>GPIO29</Name>
+                              <Description>configuration of GPIO29</Description>
+                            </Parameter>
+                            <Parameter ParameterId="30" type="local:GPIOType" IndexInDevDesc="10">
+                              <Attributes onlineaccess="read" />
+                              <Value name="_x0033_0" visiblename="GPIO30" onlineaccess="read" desc="configuration of GPIO30">255</Value>
+                              <Name>GPIO30</Name>
+                              <Description>configuration of GPIO30</Description>
+                            </Parameter>
+                            <Parameter ParameterId="31" type="local:GPIOType" IndexInDevDesc="11">
+                              <Attributes onlineaccess="read" />
+                              <Value name="_x0033_1" visiblename="GPIO31" onlineaccess="read" desc="configuration of GPIO31">255</Value>
+                              <Name>GPIO31</Name>
+                              <Description>configuration of GPIO31</Description>
+                            </Parameter>
+                            <Parameter ParameterId="1000" type="local:BITFIELD_GPIO" IndexInDevDesc="12">
+                              <Attributes channel="input" />
+                              <Value name="_x0031_000" visiblename="digital inputs (GPIO0..GPIO31)">
+                                <Element name="Bit0" visiblename="Bit0" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit1" visiblename="Bit1" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit2" visiblename="Bit2" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit3" visiblename="Bit3" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit4" visiblename="Bit4" onlineaccess="read" />
+                                <Element name="Bit5" visiblename="Bit5" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit6" visiblename="Bit6" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit7" visiblename="Bit7" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit8" visiblename="Bit8" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit9" visiblename="Bit9" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit10" visiblename="Bit10" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit11" visiblename="Bit11" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit12" visiblename="Bit12" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit13" visiblename="Bit13" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit14" visiblename="Bit14" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit15" visiblename="Bit15" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit16" visiblename="Bit16" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit17" visiblename="Bit17" onlineaccess="read" />
+                                <Element name="Bit18" visiblename="Bit18" onlineaccess="read" />
+                                <Element name="Bit19" visiblename="Bit19" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit20" visiblename="Bit20" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit21" visiblename="Bit21" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit22" visiblename="Bit22" onlineaccess="read" />
+                                <Element name="Bit23" visiblename="Bit23" onlineaccess="read" />
+                                <Element name="Bit24" visiblename="Bit24" onlineaccess="read" />
+                                <Element name="Bit25" visiblename="Bit25" onlineaccess="read" />
+                                <Element name="Bit26" visiblename="Bit26" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit27" visiblename="Bit27" onlineaccess="read" />
+                                <Element name="Bit28" visiblename="Bit28" onlineaccess="read" />
+                                <Element name="Bit29" visiblename="Bit29" onlineaccess="read" />
+                                <Element name="Bit30" visiblename="Bit30" onlineaccess="read" />
+                                <Element name="Bit31" visiblename="Bit31" onlineaccess="read" />
+                              </Value>
+                              <Name>digital inputs (GPIO0..GPIO31)</Name>
+                            </Parameter>
+                            <Parameter ParameterId="2000" type="local:BITFIELD_GPIO" IndexInDevDesc="13">
+                              <Attributes channel="output" />
+                              <Value name="_x0032_000" visiblename="digital outputs (GPIO0..GPIO31)">
+                                <Element name="Bit0" visiblename="Bit0" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit1" visiblename="Bit1" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit2" visiblename="Bit2" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit3" visiblename="Bit3" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit4" visiblename="Bit4" onlineaccess="read" />
+                                <Element name="Bit5" visiblename="Bit5" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit6" visiblename="Bit6" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit7" visiblename="Bit7" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit8" visiblename="Bit8" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit9" visiblename="Bit9" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit10" visiblename="Bit10" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit11" visiblename="Bit11" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit12" visiblename="Bit12" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit13" visiblename="Bit13" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit14" visiblename="Bit14" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit15" visiblename="Bit15" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit16" visiblename="Bit16" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit17" visiblename="Bit17" onlineaccess="read" />
+                                <Element name="Bit18" visiblename="Bit18" onlineaccess="read" />
+                                <Element name="Bit19" visiblename="Bit19" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit20" visiblename="Bit20" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit21" visiblename="Bit21" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit22" visiblename="Bit22" onlineaccess="read" />
+                                <Element name="Bit23" visiblename="Bit23" onlineaccess="read" />
+                                <Element name="Bit24" visiblename="Bit24" onlineaccess="read" />
+                                <Element name="Bit25" visiblename="Bit25" onlineaccess="read" />
+                                <Element name="Bit26" visiblename="Bit26" offlineaccess="none" onlineaccess="none" />
+                                <Element name="Bit27" visiblename="Bit27" onlineaccess="read" />
+                                <Element name="Bit28" visiblename="Bit28" onlineaccess="read" />
+                                <Element name="Bit29" visiblename="Bit29" onlineaccess="read" />
+                                <Element name="Bit30" visiblename="Bit30" onlineaccess="read" />
+                                <Element name="Bit31" visiblename="Bit31" onlineaccess="read" />
+                              </Value>
+                              <Name>digital outputs (GPIO0..GPIO31)</Name>
+                            </Parameter>
+                          </HostParameterSet>
+                        </Connector>
+                        <DeviceParameterSet />
+                      </DeviceType>
+                    </Device>
+                  </data>
+                  <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+                    <ObjectId>d4fc6313-eefc-4d90-aab8-8c1393133eec</ObjectId>
+                  </data>
+                </addData>
+              </configuration>
+            </configurations>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>ed2512d6-2ddd-403b-8408-0c03dfa32462</ObjectId>
+          </data>
+        </addData>
+      </configuration>
+    </configurations>
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/projectstructure" handleUnknown="discard">
+      <ProjectStructure>
+        <Object Name="Device" ObjectId="ed2512d6-2ddd-403b-8408-0c03dfa32462">
+          <Object Name="Application" ObjectId="b1914d62-45be-4ceb-b75c-f6b6b8c72f93">
+            <Object Name="Library Manager" ObjectId="11cc7bd8-c09a-4aa6-b90a-ca2f9a53597f" />
+            <Object Name="PLC_PRG" ObjectId="58508868-32c8-481b-8520-4cd8aa76209d" />
+            <Object Name="MainTask" ObjectId="496e3fb3-f214-4933-8001-63b45c1720ca" />
+            <Object Name="EtherCAT_Task" ObjectId="b3406d30-d628-4147-b884-a7b662ec97b4" />
+          </Object>
+          <Object Name="GPIOs_A_B" ObjectId="d4fc6313-eefc-4d90-aab8-8c1393133eec" />
+          <Object Name="EtherCAT_Master" ObjectId="3d24abde-6d49-4d6e-816d-f972054da752">
+            <Object Name="EP6224_0002" ObjectId="383f33c9-e74a-4e28-a460-2bf217376ba2">
+              <Object Name="Digital_Output" ObjectId="b4dc2760-cc70-41df-8daf-621f201b8383" />
+              <Object Name="&lt;Empty&gt;" ObjectId="5fe772a3-f7df-46af-807e-a9bb2cca6b71" />
+              <Object Name="&lt;Empty&gt;" ObjectId="950a700c-746b-4382-90b4-b556e947d315" />
+              <Object Name="&lt;Empty&gt;" ObjectId="faef0466-3fd5-4d13-8d70-7e7fc84776cf" />
+            </Object>
+          </Object>
+        </Object>
+      </ProjectStructure>
+    </data>
+  </addData>
+</project>
