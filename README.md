@@ -23,9 +23,12 @@ This project outlines the steps required to set up and run a CODESYS application
 ### 4. Download Beckhoff ESI Files
 1. Download the ESI files for the Beckhoff module from [Beckhoff's Website](https://www.beckhoff.com/nl-nl/products/i-o/ethercat-box/epxxxx-industrial-housing/ep6xxx-communication/ep6224-0002.html?filter=%7B%22language%22%3A%5B%22English%22%5D%2C%22fileType%22%3A%5B%5D%2C%22media%22%3A%5B%5D%2C%22variants%22%3A%5B%5D%7D).
 
-### 5. Import EtherCAT Project
-1. Import the `.xml` file to include the EtherCAT project.
-2. The project tree should now be visible.
+### 5. Setup EtherCAT Project
+1. Create a new project in the CODESYS Development System.
+2. Select `Standard Project`.
+3. Choose a fitting name for your project.
+4. Under `Device`, select `CODESYS Control for Raspberry Pi SL (CODESYS)`.
+5. Under `PLC_PRG`, select `Structured Text (ST)`. 
 
 ### 6. Install EtherCAT Configuration
 1. Go to `Tools` > `Device Repository` and click on the `Install` button.
@@ -40,14 +43,29 @@ This project outlines the steps required to set up and run a CODESYS application
 2. Go to the `Communication Settings` tab and click on `Scan Network`.
 3. Your Raspberry Pi should appear in the list. Select the Raspberry Pi.
 
-### 9. Start the Application
+## 9. Add EtherCat Master
+1. Right click on `Device` in the project tree.
+2. Click on Add Device.
+3. Go to `Fieldbusses` > `EtherCAT` > `Master` and select `EtherCAT Master`.
+4. EtherCAT_Master should now appear in the project tree.
+
+## 10. Add EtherCAT Slave
+1. Right click on `EtherCAT_Master` and click on `Scan for Devices...`. 
+2. Your Beckhoff module should appear in the list. Select it.
+
+## 11. Enable IO
+1. After adding the Beckhoff module, four (or depending on the module) IO ports appear under your Beckhoff module in the project tree.
+2. Click on `Plug Device`.
+3. Select `Digital Input` or `Digital Output` depending on the case and click on `Plug Device`. 
+
+### 12. Start the Application
 1. To start the application, go to `Online` and click on `Login`.
 2. After logging in, go to `Debug` and click on `Start`.
 
-### 10. Stop the Application and Logout
+### 13. Stop the Application and Logout
 1. When done, stop the application and log out.
 
-### 11. Create Boot Application
+### 14. Create Boot Application
 1. To download the project to the Raspberry Pi, go to `Online` and click on `Create Boot Application`.
 
 ## Conclusion
