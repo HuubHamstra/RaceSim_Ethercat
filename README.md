@@ -43,17 +43,17 @@ This project outlines the steps required to set up and run a CODESYS application
 2. Go to the `Communication Settings` tab and click on `Scan Network`.
 3. Your Raspberry Pi should appear in the list. Select the Raspberry Pi.
 
-## 9. Add EtherCat Master
+### 9. Add EtherCat Master
 1. Right click on `Device` in the project tree.
 2. Click on Add Device.
 3. Go to `Fieldbusses` > `EtherCAT` > `Master` and select `EtherCAT Master`.
 4. EtherCAT_Master should now appear in the project tree.
 
-## 10. Add EtherCAT Slave
+### 10. Add EtherCAT Slave
 1. Right click on `EtherCAT_Master` and click on `Scan for Devices...`. 
 2. Your Beckhoff module should appear in the list. Select it.
 
-## 11. Enable IO
+### 11. Enable IO
 1. After adding the Beckhoff module, four (or depending on the module) IO ports appear under your Beckhoff module in the project tree.
 2. Click on `Plug Device`.
 3. Select `Digital Input` or `Digital Output` depending on the case and click on `Plug Device`. 
