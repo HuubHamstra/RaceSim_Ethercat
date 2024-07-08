@@ -72,3 +72,8 @@ This project outlines the steps required to set up and run a CODESYS application
 By following these steps, you have successfully set up and configured a CODESYS application on your Raspberry Pi. You can now start developing and deploying your control systems with ease.
 
 For any issues or further assistance, refer to the official CODESYS and Beckhoff documentation.
+
+## Source
+The following links may help during installation and/or setup: 
+* https://www.youtube.com/watch?v=mbPS3uhPBfk
+* https://www.instructables.com/Programming-Raspberry-Pi-With-CODESYS/
